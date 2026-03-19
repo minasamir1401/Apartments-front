@@ -11,9 +11,12 @@ import Rules from './pages/Rules';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
+import { HelmetProvider } from 'react-helmet-async';
+
 function App() {
   return (
-    <Router>
+    <HelmetProvider>
+      <Router>
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-grow pt-20">
@@ -31,6 +34,7 @@ function App() {
         <Footer />
       </div>
     </Router>
+    </HelmetProvider>
   );
 }
 

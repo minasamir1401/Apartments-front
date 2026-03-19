@@ -16,8 +16,9 @@ const AMENITIES_OPTIONS = [
 ];
 
 const EMPTY_APT = {
-  title: '', price: 0, priceType: 'daily', location: '', beds: 1, size: '',
-  description: '', images: [], amenities: [], rules: []
+  title: '', title_en: '', price: 0, priceType: 'daily', location: '', location_en: '', beds: 1, baths: 1, size: '',
+  description: '', description_en: '', images: [], amenities: [], rules: [],
+  type: 'apartment', category: 'buy'
 };
 
 const ApartmentManager = () => {
@@ -127,14 +128,28 @@ const ApartmentManager = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         {Array.isArray(apartments) && apartments.map(apt => (
-          <div key={apt._id} className="bg-white p-4 md:p-6 rounded-3xl border border-neutral-100 flex flex-col xs:flex-row items-center gap-4 shadow-sm hover:shadow-lg transition-all">
+          <div key={apt._id} className="p-4 md:p-6 rounded-3xl border border-outline-variant/10 flex flex-col xs:flex-row items-center gap-4 shadow-sm hover:shadow-lg transition-all" style={{backgroundColor: 'var(--color-surface-container-lowest)'}}>
             {apt.images?.[0] && (
               <img src={getFullImg(apt.images[0])} className="w-full xs:w-20 h-40 xs:h-20 rounded-2xl object-cover flex-shrink-0" alt="" />
             )}
             <div className="flex-grow text-center xs:text-right">
               <h3 className="font-bold text-base md:text-lg leading-tight">{apt.title}</h3>
-              <p className="text-neutral-400 text-xs md:text-sm mt-1">{apt.location} · {apt.price} ج.م</p>
-              <p className="text-xs text-neutral-300 mt-1">{apt.images?.length || 0} صورة</p>
+              <p className="text-neutral-400 text-xs md:text-sm mt-1">
+                {apt.location} · {Number(apt.price).toLocaleString()} ج.م
+              </p>
+              <div className="flex flex-wrap gap-2 mt-2 justify-center xs:justify-start">
+                <span className="bg-surface-dim text-on-surface-variant text-[10px] px-2 py-0.5 rounded-full font-bold">
+                  {apt.beds} غرف · {apt.baths} حمام · {apt.size}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-2 justify-center xs:justify-start">
+                <span className="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-black">
+                  {apt.category === 'buy' ? 'شراء' : 'إيجار'}
+                </span>
+                <span className="bg-neutral-100 text-neutral-500 text-[10px] px-2 py-0.5 rounded-full font-black">
+                  {apt.type === 'apartment' ? 'شقة' : apt.type === 'villa' ? 'فيلا' : apt.type === 'twinhouse' ? 'توين هاوس' : 'محل تجاري'}
+                </span>
+              </div>
             </div>
             <div className="flex gap-2 flex-shrink-0 w-full xs:w-auto justify-center mt-2 xs:mt-0">
               <button onClick={() => { setEditingApt(apt); setShowModal(true); }} className="p-3 bg-blue-50 text-blue-500 rounded-xl flex-1 xs:flex-none flex justify-center hover:bg-blue-100">
@@ -149,8 +164,8 @@ const ApartmentManager = () => {
       </div>
 
       {showModal && editingApt && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-2 md:p-4">
-          <div className="bg-white rounded-[2rem] md:rounded-[3rem] w-full max-w-4xl max-h-[95vh] overflow-y-auto p-4 md:p-10 relative shadow-2xl">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-2 md:p-4 font-cairo">
+          <div className="rounded-[2rem] md:rounded-[3rem] w-full max-w-4xl max-h-[95vh] overflow-y-auto p-4 md:p-10 relative shadow-2xl border border-outline-variant/10" style={{backgroundColor: 'var(--color-surface-container-lowest)'}}>
             <button onClick={() => setShowModal(false)} className="absolute top-4 left-4 p-2 hover:bg-neutral-100 rounded-full z-[110] bg-white shadow-sm">
               <X size={20} />
             </button>
@@ -162,14 +177,27 @@ const ApartmentManager = () => {
               {/* Basic Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
-                  <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">اسم الشقة *</label>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-primary pr-2">اسم الشقة (عربي) *</label>
                   <input className="input-field h-12 md:h-14 text-sm font-bold" value={editingApt.title}
                     onChange={e => setEditingApt({ ...editingApt, title: e.target.value })} required />
                 </div>
                 <div>
-                  <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">الموقع *</label>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-400 pr-2 italic">Apartment Name (English)</label>
+                  <input className="input-field h-12 md:h-14 text-sm font-bold border-dashed" value={editingApt.title_en || ''}
+                    onChange={e => setEditingApt({ ...editingApt, title_en: e.target.value })} placeholder="E.g. Luxury Apartment in Cairo" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-primary pr-2">الموقع (عربي) *</label>
                   <input className="input-field h-12 md:h-14 text-sm font-bold" value={editingApt.location}
-                    onChange={e => setEditingApt({ ...editingApt, location: e.target.value })} />
+                    onChange={e => setEditingApt({ ...editingApt, location: e.target.value })} required />
+                </div>
+                <div>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-400 pr-2 italic">Location (English)</label>
+                  <input className="input-field h-12 md:h-14 text-sm font-bold border-dashed" value={editingApt.location_en || ''}
+                    onChange={e => setEditingApt({ ...editingApt, location_en: e.target.value })} placeholder="E.g. New Cairo, Egypt" />
                 </div>
               </div>
 
@@ -181,6 +209,24 @@ const ApartmentManager = () => {
                     onChange={e => setEditingApt({ ...editingApt, price: e.target.value })} required />
                 </div>
                 <div>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">نوع المعاملة</label>
+                  <select className="input-field h-12 md:h-14 text-sm font-bold" value={editingApt.category || 'buy'}
+                    onChange={e => setEditingApt({ ...editingApt, category: e.target.value })}>
+                    <option value="buy">شراء</option>
+                    <option value="rent">إيجار</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">نوع العقار</label>
+                  <select className="input-field h-12 md:h-14 text-sm font-bold" value={editingApt.type || 'apartment'}
+                    onChange={e => setEditingApt({ ...editingApt, type: e.target.value })}>
+                    <option value="apartment">شقة</option>
+                    <option value="villa">فيلا</option>
+                    <option value="twinhouse">توين هاوس</option>
+                    <option value="commercial">محل تجاري</option>
+                  </select>
+                </div>
+                <div className={editingApt.category === 'buy' ? 'opacity-30 pointer-events-none' : ''}>
                   <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">نوع الإيجار</label>
                   <select className="input-field h-12 md:h-14 text-sm font-bold" value={editingApt.priceType}
                     onChange={e => setEditingApt({ ...editingApt, priceType: e.target.value })}>
@@ -194,6 +240,14 @@ const ApartmentManager = () => {
                     onChange={e => setEditingApt({ ...editingApt, beds: e.target.value })} />
                 </div>
                 <div>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">عدد الحمامات</label>
+                  <input type="number" className="input-field h-12 md:h-14 text-sm font-bold" value={editingApt.baths}
+                    onChange={e => setEditingApt({ ...editingApt, baths: e.target.value })} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div>
                   <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">المساحة (متر²)</label>
                   <input 
                     type="text" 
@@ -206,11 +260,19 @@ const ApartmentManager = () => {
               </div>
 
               {/* Description */}
-              <div>
-                <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">وصف الشقة</label>
-                <textarea className="input-field h-24 md:h-32 resize-none text-sm font-bold" value={editingApt.description}
-                  onChange={e => setEditingApt({ ...editingApt, description: e.target.value })}
-                  placeholder="وصف مفصل عن الشقة..." />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-primary pr-2">وصف الشقة (عربي)</label>
+                  <textarea className="input-field h-24 md:h-32 resize-none text-sm font-bold" value={editingApt.description}
+                    onChange={e => setEditingApt({ ...editingApt, description: e.target.value })}
+                    placeholder="وصف مفصل عن الشقة..." />
+                </div>
+                <div>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-400 pr-2 italic">Description (English)</label>
+                  <textarea className="input-field h-24 md:h-32 resize-none text-sm font-bold border-dashed" value={editingApt.description_en || ''}
+                    onChange={e => setEditingApt({ ...editingApt, description_en: e.target.value })}
+                    placeholder="Detailed English description..." />
+                </div>
               </div>
 
               {/* Images */}
@@ -219,7 +281,7 @@ const ApartmentManager = () => {
                   <Image size={18} /> صور الشقة ({editingApt.images?.length || 0} صورة)
                 </label>
                 <div className="flex flex-col gap-3 mb-6">
-                  <div className="relative border-2 border-dashed border-neutral-200 rounded-3xl p-6 md:p-10 text-center hover:border-primary transition-all group">
+                  <div className="relative border-2 border-dashed border-outline-variant/30 rounded-3xl p-6 md:p-10 text-center hover:border-primary transition-all group" style={{backgroundColor: 'var(--color-surface-container-low)'}}>
                     <input
                       type="file"
                       multiple
@@ -228,11 +290,11 @@ const ApartmentManager = () => {
                       className="absolute inset-0 opacity-0 cursor-pointer z-10"
                     />
                     <div className="flex flex-col items-center gap-2">
-                      <div className="p-3 bg-neutral-50 rounded-2xl group-hover:bg-primary/10 transition-colors">
-                        <Plus className="text-neutral-400 group-hover:text-primary" />
+                      <div className="p-3 bg-surface rounded-2xl group-hover:bg-primary/10 transition-colors">
+                        <Plus className="text-on-surface-variant group-hover:text-primary" />
                       </div>
-                      <span className="text-xs md:text-sm font-bold text-neutral-500">اضغط لرفع الصور من جهازك</span>
-                      <span className="text-[10px] md:text-xs text-neutral-400">يمكنك اختيار أكثر من صورة (حتى 5 ميجا)</span>
+                      <span className="text-xs md:text-sm font-bold text-on-surface-variant">اضغط لرفع الصور من جهازك</span>
+                      <span className="text-[10px] md:text-xs text-on-surface-variant/60">يمكنك اختيار أكثر من صورة (حتى 5 ميجا)</span>
                     </div>
                   </div>
 
@@ -264,7 +326,7 @@ const ApartmentManager = () => {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4 overflow-x-hidden">
                   {editingApt.images?.map((url, idx) => (
                     <div key={idx} className="relative group rounded-2xl overflow-hidden h-24 md:h-28 shadow-sm">
-                      <img src={url} className="w-full h-full object-cover" alt={`img-${idx}`} />
+                      <img src={getFullImg(url)} className="w-full h-full object-cover" alt={`img-${idx}`} />
                       <button type="button" onClick={() => removeImage(idx)}
                         className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shadow-lg">
                         <X size={12} />
@@ -285,7 +347,7 @@ const ApartmentManager = () => {
                     const active = editingApt.amenities?.find(a => a.id === opt.id)?.enabled;
                     return (
                       <button type="button" key={opt.id} onClick={() => toggleAmenity(opt.id)}
-                        className={`p-2.5 rounded-xl md:rounded-2xl border transition-all text-[10px] md:text-xs font-bold flex items-center gap-2 ${active ? 'bg-primary text-black border-primary shadow-sm' : 'bg-neutral-50 border-neutral-100 text-neutral-400'}`}>
+                        className={`p-2.5 rounded-xl md:rounded-2xl border transition-all text-[10px] md:text-xs font-bold flex items-center gap-2 ${active ? 'bg-primary text-white border-primary shadow-sm' : 'bg-surface-low border-outline-variant/10 text-on-surface-variant'}`}>
                         {active ? <Check size={14} /> : <Plus size={14} />} {opt.label}
                       </button>
                     );

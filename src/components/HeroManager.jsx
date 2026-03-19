@@ -205,7 +205,8 @@ const HeroManager = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-neutral-100"
+          className="p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-outline-variant/10"
+          style={{backgroundColor: 'var(--color-surface-container-lowest)'}}
         >
           <div className="flex items-center justify-between mb-10">
             <div className="flex items-center gap-4">
@@ -256,11 +257,11 @@ const HeroManager = () => {
 
             <div className="space-y-6">
                <label className="block text-sm font-bold text-neutral-500 mb-2">صورة الخلفية</label>
-               <div onClick={() => fileInputRef.current?.click()} className="aspect-video rounded-[2rem] border-2 border-dashed border-neutral-200 bg-neutral-50 flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-all overflow-hidden relative group">
+               <div onClick={() => fileInputRef.current?.click()} className="aspect-video rounded-[2rem] border-2 border-dashed border-outline-variant/30 bg-surface-low flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-all overflow-hidden relative group">
                   {previewUrl ? (
                     <img src={previewUrl} className="w-full h-full object-cover" alt="" />
                   ) : (
-                    <Upload size={32} className="text-neutral-300" />
+                    <Upload size={32} className="text-on-surface-variant/30" />
                   )}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-bold">تغيير الصورة</div>
                </div>

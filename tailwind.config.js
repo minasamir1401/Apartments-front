@@ -7,8 +7,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#eebd2b",
-        secondary: "#1a1a1a",
+        primary: "#b20007",
+        "primary-container": "#d7261e",
+        "on-primary": "#ffffff",
+        surface: "#fff8f3",
+        "surface-bright": "#ffffff",
+        "surface-dim": "#e4d8ca",
+        "surface-low": "#fef2e3",
+        "surface-high": "#ede1d2",
+        "on-surface": "#201b12",
+        "outline-variant": "#e6bdb7",
+        secondary: "#201b12",
       },
       fontFamily: {
         amiri: ['Amiri', 'serif'],

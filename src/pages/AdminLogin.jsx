@@ -31,13 +31,14 @@ const AdminLogin = () => {
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-white p-12 rounded-[3rem] shadow-2xl border border-neutral-100"
+        className="w-full max-w-md p-12 rounded-[3rem] shadow-2xl border border-outline-variant/10"
+        style={{backgroundColor: 'var(--color-surface-container-lowest)'}}
       >
         <div className="text-center mb-10">
           <div className="w-20 h-20 bg-primary/10 text-primary rounded-3xl flex items-center justify-center mx-auto mb-6">
             <Lock className="w-10 h-10" />
           </div>
-          <h2 className="text-3xl font-bold">تسجيل دخول المسؤول</h2>
+          <h2 className="text-3xl font-bold text-on-surface">تسجيل دخول المسؤول</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

@@ -1,29 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import "tailwindcss";
 
+:root {
+  /* Light Theme - Original Red Gate */
+  --color-primary: #e11d48;
+  --color-on-primary: #ffffff;
+  --color-surface: #ffffff;
+  --color-on-surface: #121212;
+  --color-on-surface-variant: #444444;
+  --color-background: #fdfdfd;
+  --color-on-background: #121212;
+  --color-outline: #e2e8f0;
+  --color-outline-variant: #f1f5f9;
+  
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f8fafc;
+  --color-surface-container: #f1f5f9;
+  --color-surface-container-high: #e2e8f0;
+  --color-surface-container-highest: #cbd5e1;
+}
+
+.dark {
+  /* Dark Luxury Theme - Inspired by Image */
+  --color-primary: #d4a017; /* Golden Yellow */
+  --color-on-primary: #000000;
+  
+  --color-surface: #111827;
+  --color-on-surface: #f8fafc;
+  --color-on-surface-variant: #94a3b8;
+  
+  --color-background: #060b18;
+  --color-on-background: #f8fafc;
+  
+  --color-outline: #1e293b;
+  --color-outline-variant: rgba(148, 163, 184, 0.1);
+  
+  --color-surface-container-lowest: #0a1122;
+  --color-surface-container-low: #0a1122;
+  --color-surface-container: #111827;
+  --color-surface-container-high: #1e293b;
+  --color-surface-container-highest: #334155;
+}
+
 @theme {
-  --color-primary: #eebd2b;
+  --color-primary: var(--color-primary);
+  --color-on-primary: var(--color-on-primary);
+  --color-surface: var(--color-surface);
+  --color-background: var(--color-background);
+  --color-on-background: var(--color-on-background);
+  --color-on-surface: var(--color-on-surface);
+  --color-on-surface-variant: var(--color-on-surface-variant);
+  --color-outline: var(--color-outline);
+  --color-outline-variant: var(--color-outline-variant);
+
+  /* Containers */
+  --color-surface-container-lowest: var(--color-surface-container-lowest);
+  --color-surface-container-low: var(--color-surface-container-low);
+  --color-surface-container: var(--color-surface-container);
+  --color-surface-container-high: var(--color-surface-container-high);
+  --color-surface-container-highest: var(--color-surface-container-highest);
+
+  /* Fonts */
   --font-cairo: "Cairo", sans-serif;
   --font-amiri: "Amiri", serif;
 }
 
 @layer base {
   body {
-    @apply bg-neutral-50 text-neutral-900;
+    background-color: var(--color-background);
+    color: var(--color-on-background);
+    font-family: 'Inter', 'Outfit', 'Cairo', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@layer base {
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
     font-family: var(--font-cairo);
     direction: rtl;
   }
 }
 
 @layer components {
+  /* الزجاج الشفاف - Glassmorphism */
   .glass {
-    @apply bg-white/80 backdrop-blur-md border border-white/20;
+    background-color: rgba(255, 248, 243, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(230, 189, 183, 0.2);
   }
 
+  /* زر رئيسي بتدرج أحمر فاخر */
   .btn-primary {
-    @apply bg-primary hover:bg-primary/90 text-black font-bold py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-primary/20 transform hover:-translate-y-1;
+    background: linear-gradient(135deg, #b20007 0%, #d7261e 100%);
+    color: #ffffff;
+    font-weight: 700;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 32px rgba(178, 0, 7, 0.25);
+    transform: translateY(0);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #9a0006 0%, #c01e17 100%);
+    box-shadow: 0 12px 40px rgba(178, 0, 7, 0.35);
+    transform: translateY(-2px);
   }
 
+  /* حقل الإدخال */
   .input-field {
-    @apply w-full p-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: var(--color-surface-container-highest);
+    border: none;
+    border-radius: 0.75rem;
+    outline: none;
+    transition: all 0.25s ease;
+    color: var(--color-on-surface);
+    border-bottom: 2px solid transparent;
+  }
+  .input-field:focus {
+    background-color: var(--color-surface-bright);
+    border-bottom-color: var(--color-primary);
+    box-shadow: 0 4px 20px rgba(178, 0, 7, 0.08);
+  }
+
+  /* بطاقات قسط فاخرة */
+  .card-premium {
+    background-color: var(--color-surface-container-lowest);
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 40px rgba(32, 27, 18, 0.06);
+    transition: all 0.3s ease;
+  }
+  .card-premium:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(32, 27, 18, 0.12);
   }
 }

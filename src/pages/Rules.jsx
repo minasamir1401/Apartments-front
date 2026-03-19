@@ -1,13 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Shield, HelpCircle, FileText, Activity, CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Rules = () => {
+  const { t } = useTranslation();
   return (
     <div className="container mx-auto px-6 py-20">
       <div className="text-center mb-16">
-        <h1 className="text-5xl font-bold mb-4">القواعد والدليل للمستأجر</h1>
-        <p className="text-neutral-500">كل ما تحتاج لمعرفته لضمان إقامة مريحة وسلسة.</p>
+        <h1 className="text-5xl font-black mb-4 italic text-on-surface">{t('rules_title')}</h1>
+        <p className="text-on-surface-variant font-bold text-lg">{t('rules_subtitle')}</p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-12">
@@ -16,34 +18,34 @@ const Rules = () => {
           animate={{ opacity: 1, x: 0 }}
           className="space-y-8"
         >
-          <div className="p-8 bg-white rounded-[2.5rem] shadow-sm border border-neutral-100">
+          <div className="p-8 bg-surface rounded-[2.5rem] shadow-sm border border-outline-variant/10">
             <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-6">
               <Shield className="w-6 h-6" />
             </div>
-            <h3 className="text-2xl font-bold mb-4">قواعد السلوك العامة</h3>
-            <ul className="space-y-4 text-neutral-500 font-light">
+            <h3 className="text-2xl font-black mb-4 text-on-surface italic">{t('rules_general_title')}</h3>
+            <ul className="space-y-4 text-on-surface-variant font-bold">
               <li className="flex gap-3">
-                <span className="w-6 h-6 rounded-full bg-neutral-100 flex items-center justify-center text-xs text-black font-bold">1</span>
-                احترام الجيران وعدم إصدار أصوات مزعجة بعد الساعة 11 مساءً.
+                <span className="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center text-xs text-primary font-black flex-shrink-0">1</span>
+                {t('rules_general_1')}
               </li>
               <li className="flex gap-3">
-                <span className="w-6 h-6 rounded-full bg-neutral-100 flex items-center justify-center text-xs text-black font-bold">2</span>
-                الحفاظ على نظافة الشقة والمرافق العامة.
+                <span className="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center text-xs text-primary font-black flex-shrink-0">2</span>
+                {t('rules_general_2')}
               </li>
               <li className="flex gap-3">
-                <span className="w-6 h-6 rounded-full bg-neutral-100 flex items-center justify-center text-xs text-black font-bold">3</span>
-                التدخين مسموح به فقط في الشرفات (البلكونات).
+                <span className="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center text-xs text-primary font-black flex-shrink-0">3</span>
+                {t('rules_general_3')}
               </li>
             </ul>
           </div>
 
-          <div className="p-8 bg-neutral-900 text-white rounded-[2.5rem] shadow-xl">
-            <div className="w-12 h-12 bg-white/10 text-primary rounded-2xl flex items-center justify-center mb-6">
+          <div className="p-8 bg-surface-container-highest text-on-surface rounded-[2.5rem] shadow-xl border border-outline-variant/10">
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-6 bg-primary/20 text-primary">
               <Activity className="w-6 h-6" />
             </div>
-            <h3 className="text-2xl font-bold mb-4 text-white">سياسة الإلغاء</h3>
-            <p className="text-neutral-400 font-light leading-relaxed">
-              يمكن إلغاء الحجز مجاناً حتى قبل موعد الوصول بـ 48 ساعة. في حالة الإلغاء خلال أقل من 48 ساعة يتم خصم تكلفة ليلة واحدة كرسوم إلغاء.
+            <h3 className="text-2xl font-black mb-4 text-on-surface italic">{t('rules_cancel_title')}</h3>
+            <p className="text-on-surface-variant font-bold leading-relaxed">
+              {t('rules_cancel_text')}
             </p>
           </div>
         </motion.div>
@@ -53,29 +55,29 @@ const Rules = () => {
           animate={{ opacity: 1, x: 0 }}
           className="space-y-8"
         >
-          <div className="p-8 bg-white rounded-[2.5rem] shadow-sm border border-neutral-100">
+          <div className="p-8 bg-surface rounded-[2.5rem] shadow-sm border border-outline-variant/10">
             <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-6">
               <FileText className="w-6 h-6" />
             </div>
-            <h3 className="text-2xl font-bold mb-4">الأوراق المطلوبة</h3>
-            <p className="text-neutral-500 mb-6 font-light">يجب تقديم الأوراق التالية عند تسجيل الدخول:</p>
-            <ul className="space-y-3">
-              <li className="flex items-center gap-3 text-neutral-600">
-                <CheckCircle className="w-5 h-5 text-green-500" /> صورة البطاقة الشخصية (أو جواز السفر للأجانب)
+            <h3 className="text-2xl font-black mb-4 text-on-surface italic">{t('rules_docs_title')}</h3>
+            <p className="text-on-surface-variant mb-6 font-bold">{t('rules_docs_subtitle')}</p>
+            <ul className="space-y-3 font-black">
+              <li className="flex items-center gap-3 text-on-surface">
+                <CheckCircle className="w-5 h-5 text-primary" /> {t('rules_doc_1')}
               </li>
-              <li className="flex items-center gap-3 text-neutral-600">
-                <CheckCircle className="w-5 h-5 text-green-500" /> وثيقة الزواج (للمصريين)
+              <li className="flex items-center gap-3 text-on-surface">
+                <CheckCircle className="w-5 h-5 text-primary" /> {t('rules_doc_2')}
               </li>
             </ul>
           </div>
 
-          <div className="p-8 bg-primary text-black rounded-[2.5rem] shadow-sm">
-            <div className="w-12 h-12 bg-black/10 text-black rounded-2xl flex items-center justify-center mb-6">
+          <div className="p-8 text-on-primary rounded-[2.5rem] shadow-sm bg-primary origin-center">
+            <div className="w-12 h-12 bg-on-primary/20 text-on-primary rounded-2xl flex items-center justify-center mb-6">
               <HelpCircle className="w-6 h-6" />
             </div>
-            <h3 className="text-2xl font-bold mb-4">هل لديك سؤال؟</h3>
-            <p className="font-medium mb-6">فريقنا جاهز للرد على استفساراتك في أي وقت.</p>
-            <a href="tel:0123456789" className="bg-black text-white px-8 py-3 rounded-full font-bold inline-block">تواصل معنا</a>
+            <h3 className="text-2xl font-black mb-4 italic">{t('rules_q_title')}</h3>
+            <p className="font-bold mb-6 opacity-90">{t('rules_q_text')}</p>
+            <a href="tel:01234567890" className="bg-on-primary text-primary px-8 py-3 rounded-full font-black inline-block hover:bg-surface transition-colors shadow-lg uppercase tracking-widest text-sm">{t('rules_btn_contact')}</a>
           </div>
         </motion.div>
       </div>

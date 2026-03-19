@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /api/hero
+Allow: /api/apartments
+Disallow: /admin
+Disallow: /api/admin
+
+Sitemap: https://redgate-egypt.com/sitemap.xml
