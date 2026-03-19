@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #eebd2b;
+  --font-cairo: "Cairo", sans-serif;
+  --font-amiri: "Amiri", serif;
+}
+
+@layer base {
+  body {
+    @apply bg-neutral-50 text-neutral-900;
+    font-family: var(--font-cairo);
+    direction: rtl;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/20;
+  }
+
+  .btn-primary {
+    @apply bg-primary hover:bg-primary/90 text-black font-bold py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-primary/20 transform hover:-translate-y-1;
+  }
+
+  .input-field {
+    @apply w-full p-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all;
+  }
+}
