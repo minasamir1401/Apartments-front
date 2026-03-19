@@ -65,7 +65,7 @@ const ApartmentDetails = () => {
   const currentLoc = isEn && apt.location_en ? apt.location_en : apt.location;
   const currentDesc = isEn && apt.description_en ? apt.description_en : (apt.description || t('no_desc_available'));
 
-  const whatsappUrl = `https://wa.me/201234567890?text=${encodeURIComponent(`مرحباً، أود الاستفسار عن ${currentTitle}`)}`;
+  const whatsappUrl = `https://wa.me/201203311567?text=${encodeURIComponent(`مرحباً، أود الاستفسار عن ${currentTitle}`)}`;
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -245,7 +245,7 @@ const ApartmentDetails = () => {
                    
                    <div className="flex items-center justify-center gap-4 pt-4 text-on-surface-variant/40">
                       <Phone size={16} />
-                      <span className="text-sm font-bold">اتصل بنا: 01234567890</span>
+                      <span className="text-sm font-bold">اتصل بنا: 01203311567</span>
                    </div>
                 </div>
                 

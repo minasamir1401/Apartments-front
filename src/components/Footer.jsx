@@ -59,7 +59,7 @@ const Footer = () => {
                   </div>
                   <div>
                      <p className="text-xs text-neutral-500 font-bold mb-1">{t('footer_phone')}</p>
-                     <p className="text-sm font-black">+20 123 456 7890</p>
+                     <p className="text-sm font-black">+201203311567</p>
                   </div>
                </li>
                <li className="flex gap-4">

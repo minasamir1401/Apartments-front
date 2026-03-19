@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
+  const isEn = i18n.language === 'en';
   const [isOpen, setIsOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isDark, setIsDark] = useState(localStorage.getItem('theme') === 'dark');
@@ -60,6 +61,7 @@ const Navbar = () => {
   const navLinks = [
     { to: "/", label: t('nav_home'), icon: <Home size={18} /> },
     { to: "/apartments", label: t('nav_explore'), icon: <Search size={18} /> },
+    { to: "/projects", label: isEn ? 'Projects' : 'مشاريعنا', icon: <Building2 size={18} /> },
     { to: "/rules", label: t('nav_guide'), icon: <Info size={18} /> },
     { to: "/status", label: t('nav_status'), icon: <Calendar size={18} /> },
   ];

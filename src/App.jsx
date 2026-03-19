@@ -10,6 +10,8 @@ import BookingStatus from './pages/BookingStatus';
 import Rules from './pages/Rules';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import Projects from './pages/Projects';
+import ProjectDetails from './pages/ProjectDetails';
 
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -26,6 +28,8 @@ function App() {
             <Route path="/apartments/:id" element={<ApartmentDetails />} />
             <Route path="/book" element={<Booking />} />
             <Route path="/status" element={<BookingStatus />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:id" element={<ProjectDetails />} />
             <Route path="/rules" element={<Rules />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />

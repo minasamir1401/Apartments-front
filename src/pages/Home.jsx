@@ -90,7 +90,7 @@ const Home = () => {
           "name": "Red Gate Egypt | ريد غيت",
           "image": "https://redgate-egypt.com/logo.png",
           "url": "https://redgate-egypt.com",
-          "telephone": "+201234567890",
+          "telephone": "+201203311567",
           "address": {
             "@type": "PostalAddress",
             "streetAddress": "New Cairo",

@@ -77,7 +77,7 @@ const Rules = () => {
             </div>
             <h3 className="text-2xl font-black mb-4 italic">{t('rules_q_title')}</h3>
             <p className="font-bold mb-6 opacity-90">{t('rules_q_text')}</p>
-            <a href="tel:01234567890" className="bg-on-primary text-primary px-8 py-3 rounded-full font-black inline-block hover:bg-surface transition-colors shadow-lg uppercase tracking-widest text-sm">{t('rules_btn_contact')}</a>
+            <a href="tel:01203311567" className="bg-on-primary text-primary px-8 py-3 rounded-full font-black inline-block hover:bg-surface transition-colors shadow-lg uppercase tracking-widest text-sm">{t('rules_btn_contact')}</a>
           </div>
         </motion.div>
       </div>

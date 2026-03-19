@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Home, Trash2, Bell, BellOff, BellRing } from 'lucide-react';
+import { LayoutDashboard, Home, Trash2, Bell, BellOff, BellRing, Building2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ApartmentManager from '../components/ApartmentManager';
 import HeroManager from '../components/HeroManager';
 import AreaManager from '../components/AreaManager'; // Added import
+import ProjectManager from '../components/ProjectManager';
+
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
 const API = `${API_BASE}/api`;
@@ -233,6 +235,12 @@ const AdminDashboard = () => {
           {t('admin_manage_areas')} {/* Translated label for areas */}
         </button>
         <button
+          onClick={() => setActiveTab('projects')}
+          className={`px-4 md:px-8 py-2 md:py-3 rounded-xl font-bold transition-all text-sm whitespace-nowrap flex-1 sm:flex-none ${activeTab === 'projects' ? 'bg-white shadow-sm text-black' : 'text-neutral-400'}`}
+        >
+          {isEn ? 'Manage Projects' : 'إدارة المشاريع'}
+        </button>
+        <button
           onClick={() => setActiveTab('hero')}
           className={`px-4 md:px-8 py-2 md:py-3 rounded-xl font-bold transition-all text-sm whitespace-nowrap flex-1 sm:flex-none ${activeTab === 'hero' ? 'bg-white shadow-sm text-black' : 'text-neutral-400'}`}
         >
@@ -287,7 +295,8 @@ const AdminDashboard = () => {
                     <tr key={b._id} className="hover:bg-neutral-50 transition-colors">
                       <td className="p-6">
                         <div className="flex items-center gap-2 font-bold">
-                          <Home className="w-4 h-4 text-primary" /> {b.apartmentTitle || t('not_specified')}
+                          {b.project_title ? <Building2 className="w-4 h-4 text-primary" /> : <Home className="w-4 h-4 text-primary" />}
+                          {b.project_title || b.apartmentTitle || t('not_specified')}
                         </div>
                       </td>
                       <td className="p-6">
@@ -333,6 +342,8 @@ const AdminDashboard = () => {
         <ApartmentManager />
       ) : activeTab === 'areas' ? ( // Added conditional rendering for AreaManager
         <AreaManager />
+      ) : activeTab === 'projects' ? (
+        <ProjectManager />
       ) : (
         <HeroManager />
       )}
