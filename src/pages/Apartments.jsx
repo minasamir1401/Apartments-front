@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, ArrowLeft, ArrowRight, Building2, MapPin, SlidersHorizontal } from 'lucide-react';
 import PropertyCard from '../components/PropertyCard';
+import SEO from '../components/SEO';
 
 const Apartments = () => {
   const { t } = useTranslation();
@@ -55,6 +56,18 @@ const Apartments = () => {
 
   return (
     <div className="min-h-screen bg-surface pt-32 pb-24">
+      <SEO
+        title="شقق ووحدات للبيع والإيجار في مصر | Red Gate Egypt"
+        description="تصفح مئات الشقق والوحدات السكنية الفاخرة للبيع والإيجار في مصر - الجونة، الغردقة، القاهرة الجديدة. أسعار منافسة وعقارات موثوقة من Red Gate."
+        url="https://red-gate.tech/apartments"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "SearchResultsPage",
+          "name": "شقق ووحدات للبيع والإيجار | Red Gate Egypt",
+          "description": "تصفح جميع العقارات المتاحة على منصة ريد غيت",
+          "url": "https://red-gate.tech/apartments"
+        }}
+      />
       <div className="container mx-auto px-6">
         
         {/* Header Section */}

@@ -1,8 +1,17 @@
 User-agent: *
 Allow: /
-Allow: /api/hero
-Allow: /api/apartments
 Disallow: /admin
+Disallow: /admin/dashboard
 Disallow: /api/admin
 
-Sitemap: https://redgate-egypt.com/sitemap.xml
+# Allow all public pages
+Allow: /apartments
+Allow: /projects
+Allow: /book
+Allow: /status
+
+# Crawl-delay (optional, helps avoid overload)
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://red-gate.tech/sitemap.xml

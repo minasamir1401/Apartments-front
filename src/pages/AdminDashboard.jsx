@@ -1,17 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Home, Trash2, Bell, BellOff, BellRing, Building2 } from 'lucide-react';
+import { LayoutDashboard, Home, Trash2, Bell, BellOff, BellRing, Building2, Lock, Save } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ApartmentManager from '../components/ApartmentManager';
 import HeroManager from '../components/HeroManager';
-import AreaManager from '../components/AreaManager'; // Added import
+import AreaManager from '../components/AreaManager';
 import ProjectManager from '../components/ProjectManager';
+import api from '../utils/api';
 
-
-const API_BASE = import.meta.env.VITE_API_URL || '';
-const API = `${API_BASE}/api`;
 
 const AdminDashboard = () => {
   const { t, i18n } = useTranslation();
@@ -24,6 +21,11 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState({ totalBookings: 0, totalIncome: 0, expectedIncome: 0, monthlyIncome: 0, pendingCount: 0 });
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(initialTab);
+  
+  // Password Change State
+  const [pwData, setPwData] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
+  const [pwLoading, setPwLoading] = useState(false);
+  const [pwMessage, setPwMessage] = useState({ type: '', text: '' });
 
   useEffect(() => {
     const tab = searchParams.get('tab');
@@ -61,11 +63,9 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      if (!token) return navigate('/admin/login');
       const [bRes, sRes] = await Promise.all([
-        axios.get(`${API}/bookings`),
-        axios.get(`${API}/admin/stats`)
+        api.get('/bookings'),
+        api.get('/admin/stats')
       ]);
       setBookings(bRes.data);
       setStats(sRes.data);
@@ -97,7 +97,7 @@ const AdminDashboard = () => {
     // Poll every 10 seconds for new bookings
     const interval = setInterval(async () => {
       try {
-        const res = await axios.get(`${API}/bookings`);
+        const res = await api.get('/bookings');
         const newBookings = res.data;
         const currentCount = newBookings.length;
 
@@ -117,7 +117,7 @@ const AdminDashboard = () => {
     try {
       // Update in local bookings array first (optimistic UI)
       setBookings(prev => prev.map(b => b._id === id ? { ...b, status } : b));
-      await axios.patch(`${API}/bookings/${id}`, { status });
+      await api.patch(`/bookings/${id}`, { status });
       fetchData();
     } catch (e) {
       alert('خطأ في التحديث');
@@ -127,8 +127,29 @@ const AdminDashboard = () => {
   const handleDelete = async (id) => {
     if (!window.confirm(isEn ? 'Delete this booking permanently?' : 'حذف هذا الحجز نهائياً؟')) return;
     setBookings(prev => prev.filter(b => b._id !== id));
-    await axios.delete(`${API}/bookings/${id}`);
+    await api.delete(`/bookings/${id}`);
     fetchData();
+  };
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    if (pwData.newPassword !== pwData.confirmPassword) {
+      return setPwMessage({ type: 'error', text: isEn ? "Passwords don't match" : 'كلمات المرور الجديدة غير متطابقة' });
+    }
+    setPwLoading(true);
+    setPwMessage({ type: '', text: '' });
+    try {
+      await api.post('/admin/change-password', {
+        oldPassword: pwData.oldPassword,
+        newPassword: pwData.newPassword
+      });
+      setPwMessage({ type: 'success', text: isEn ? 'Password updated successfully' : 'تم تحديث كلمة المرور بنجاح' });
+      setPwData({ oldPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (err) {
+      setPwMessage({ type: 'error', text: err.response?.data?.message || (isEn ? 'Failed to update password' : 'فشل تحديث كلمة المرور') });
+    } finally {
+      setPwLoading(false);
+    }
   };
 
   if (loading) return (
@@ -246,6 +267,12 @@ const AdminDashboard = () => {
         >
           {t('admin_manage_hero')}
         </button>
+        <button
+          onClick={() => setActiveTab('security')}
+          className={`px-4 md:px-8 py-2 md:py-3 rounded-xl font-bold transition-all text-sm whitespace-nowrap flex-1 sm:flex-none ${activeTab === 'security' ? 'bg-white shadow-sm text-black' : 'text-neutral-400'}`}
+        >
+          {isEn ? 'Security' : 'الأمان'}
+        </button>
       </div>
 
       {activeTab === 'bookings' ? (
@@ -344,8 +371,71 @@ const AdminDashboard = () => {
         <AreaManager />
       ) : activeTab === 'projects' ? (
         <ProjectManager />
-      ) : (
+      ) : activeTab === 'hero' ? (
         <HeroManager />
+      ) : (
+        <div className="max-w-2xl mx-auto">
+          <div className="p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] shadow-xl border border-outline-variant/10" style={{backgroundColor: 'var(--color-surface-container-lowest)'}}>
+            <div className="flex items-center gap-4 mb-8">
+              <div className="p-4 bg-primary/10 text-primary rounded-2xl">
+                <Lock size={24} />
+              </div>
+              <div>
+                <h2 className="text-xl md:text-2xl font-bold">{isEn ? 'Change Password' : 'تغيير كلمة المرور'}</h2>
+                <p className="text-neutral-400 text-sm">{isEn ? 'Keep your account secure' : 'حافظ على أمان حسابك'}</p>
+              </div>
+            </div>
+
+            <form onSubmit={handlePasswordChange} className="space-y-6">
+              {pwMessage.text && (
+                <div className={`p-4 rounded-2xl text-center text-sm font-bold ${pwMessage.type === 'success' ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'}`}>
+                  {pwMessage.text}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">{isEn ? 'Current Password' : 'كلمة المرور الحالية'}</label>
+                <input 
+                  required
+                  type="password" 
+                  className="input-field h-14"
+                  value={pwData.oldPassword}
+                  onChange={(e) => setPwData({...pwData, oldPassword: e.target.value})}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">{isEn ? 'New Password' : 'كلمة المرور الجديدة'}</label>
+                <input 
+                  required
+                  type="password" 
+                  className="input-field h-14"
+                  value={pwData.newPassword}
+                  onChange={(e) => setPwData({...pwData, newPassword: e.target.value})}
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">{isEn ? 'Confirm New Password' : 'تأكيد كلمة المرور الجديدة'}</label>
+                <input 
+                  required
+                  type="password" 
+                  className="input-field h-14"
+                  value={pwData.confirmPassword}
+                  onChange={(e) => setPwData({...pwData, confirmPassword: e.target.value})}
+                />
+              </div>
+
+              <button 
+                disabled={pwLoading}
+                className="btn-primary w-full h-14 md:h-16 text-lg flex justify-center items-center gap-3 shadow-xl"
+              >
+                {pwLoading ? <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" /> : <Save size={20} />}
+                {pwLoading ? (isEn ? 'Updating...' : 'جاري التحديث...') : (isEn ? 'Save Password' : 'حفظ كلمة المرور الجديدة')}
+              </button>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

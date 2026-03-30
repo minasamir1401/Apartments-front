@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, ArrowRight, X, ChevronRight, ChevronLeft, MapPin, Ruler, Tag, Phone, CalendarCheck, Plus, CheckCircle2, User, Send } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const ProjectDetails = () => {
   const { id } = useParams();
@@ -114,6 +115,26 @@ const ProjectDetails = () => {
 
   return (
     <div className="min-h-screen bg-surface pb-24 pt-20" dir={isEn ? 'ltr' : 'rtl'}>
+      <SEO
+        title={isEn ? (project.title_en || project.title) + ' | Red Gate Egypt' : project.title + ' | ريد غيت'}
+        description={(isEn ? (project.description_en || project.description) : project.description)?.substring(0, 160)}
+        url={`https://red-gate.tech/projects/${project._id}`}
+        image={getImageUrl(project.main_image || (project.images && project.images[0]))}
+        type="article"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "RealEstateListing",
+          "name": isEn ? (project.title_en || project.title) : project.title,
+          "description": isEn ? (project.description_en || project.description) : project.description,
+          "image": getImageUrl(project.main_image || (project.images && project.images[0])),
+          "url": `https://red-gate.tech/projects/${project._id}`,
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": isEn ? (project.location_en || project.location) : project.location,
+            "addressCountry": "EG"
+          }
+        }}
+      />
       {/* Hero Section */}
       <div className="h-[50vh] md:h-[60vh] relative overflow-hidden">
         <img 

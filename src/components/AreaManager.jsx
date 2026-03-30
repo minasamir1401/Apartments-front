@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, X, Save, Image, Link } from 'lucide-react';
-
-const API_BASE = import.meta.env.VITE_API_URL || '';
-const API = `${API_BASE}/api/areas`;
+import api from '../utils/api';
 
 const EMPTY_AREA = { name: '', name_en: '', image: '', count: '', count_en: '', display_order: 0 };
 
@@ -12,11 +10,13 @@ const AreaManager = () => {
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const fetchAreas = () => {
-    fetch(API)
-      .then(r => r.json())
-      .then(data => setAreas(Array.isArray(data) ? data : []))
-      .catch(() => setAreas([]));
+  const fetchAreas = async () => {
+    try {
+      const res = await api.get('/areas');
+      setAreas(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      setAreas([]);
+    }
   };
 
   useEffect(() => { fetchAreas(); }, []);
@@ -25,14 +25,12 @@ const AreaManager = () => {
     e.preventDefault();
     setSaving(true);
     try {
-      const method = editingArea.id || editingArea._id ? 'PATCH' : 'POST';
       const id = editingArea.id || editingArea._id;
-      const url = id ? `${API}/${id}` : API;
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editingArea)
-      });
+      if (id) {
+        await api.patch(`/areas/${id}`, editingArea);
+      } else {
+        await api.post('/areas', editingArea);
+      }
       if (!res.ok) throw new Error('Failed');
       setShowModal(false);
       fetchAreas();
@@ -45,8 +43,12 @@ const AreaManager = () => {
 
   const deleteArea = async (id) => {
     if (!window.confirm('هل تريد حذف هذه المنطقة؟')) return;
-    await fetch(`${API}/${id}`, { method: 'DELETE' });
-    fetchAreas();
+    try {
+      await api.delete(`/areas/${id}`);
+      fetchAreas();
+    } catch (err) {
+      alert('خطأ في الحذف');
+    }
   };
 
   return (

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, X, Check, Save, Image, Link } from 'lucide-react';
-
-const API_BASE = import.meta.env.VITE_API_URL || '';
-const API = `${API_BASE}/api/apartments`;
+import api from '../utils/api';
 
 const AMENITIES_OPTIONS = [
   { id: 'wifi', label: 'واي فاي 5G', iconName: 'Wifi' },
@@ -28,14 +26,13 @@ const ApartmentManager = () => {
   const [newImageUrl, setNewImageUrl] = useState('');
   const [saving, setSaving] = useState(false);
 
-  const fetchApts = () => {
-    fetch(API)
-      .then(r => r.json())
-      .then(data => {
-        if (Array.isArray(data)) setApartments(data);
-        else setApartments([]);
-      })
-      .catch(() => setApartments([]));
+  const fetchApts = async () => {
+    try {
+      const res = await api.get('/apartments');
+      setApartments(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      setApartments([]);
+    }
   };
 
   useEffect(() => { fetchApts(); }, []);
@@ -44,13 +41,11 @@ const ApartmentManager = () => {
     e.preventDefault();
     setSaving(true);
     try {
-      const method = editingApt._id ? 'PATCH' : 'POST';
-      const url = editingApt._id ? `${API}/${editingApt._id}` : API;
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editingApt)
-      });
+      if (editingApt._id) {
+        await api.patch(`/apartments/${editingApt._id}`, editingApt);
+      } else {
+        await api.post('/apartments', editingApt);
+      }
       if (!res.ok) throw new Error('Failed');
       setShowModal(false);
       fetchApts();
@@ -64,8 +59,12 @@ const ApartmentManager = () => {
 
   const deleteApt = async (id) => {
     if (!window.confirm('هل تريد حذف هذه الشقة نهائياً؟')) return;
-    await fetch(`${API}/${id}`, { method: 'DELETE' });
-    fetchApts();
+    try {
+      await api.delete(`/apartments/${id}`);
+      fetchApts();
+    } catch (err) {
+      alert('خطأ في الحذف');
+    }
   };
 
   const toggleAmenity = (id) => {
@@ -88,11 +87,10 @@ const ApartmentManager = () => {
     files.forEach(file => formData.append('images', file));
 
     try {
-      const res = await fetch(`/api/apartments/upload`, {
-        method: 'POST',
-        body: formData
+      const res = await api.post('/apartments/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-      const data = await res.json();
+      const data = res.data;
       if (data.urls) {
         setEditingApt(prev => ({ ...prev, images: [...(prev.images || []), ...data.urls] }));
       }

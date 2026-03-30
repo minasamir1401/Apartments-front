@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, X, Save, Image, RefreshCw, Link as LinkIcon, Upload, Trash, MapPin, Building2 } from 'lucide-react';
-
-const API_BASE = import.meta.env.VITE_API_URL || '';
-const API = `${API_BASE}/api/projects`;
-const UPLOAD_API = `${API_BASE}/api/apartments/upload`;
+import api from '../utils/api';
 
 const EMPTY_PROJECT = { 
   title: '', 
@@ -28,13 +25,16 @@ const ProjectManager = () => {
   const [loading, setLoading] = useState(true);
   const [imageUrlInput, setImageUrlInput] = useState('');
 
-  const fetchProjects = () => {
+  const fetchProjects = async () => {
     setLoading(true);
-    fetch(API)
-      .then(r => r.json())
-      .then(data => setProjects(Array.isArray(data) ? data : []))
-      .catch(() => setProjects([]))
-      .finally(() => setLoading(false));
+    try {
+      const res = await api.get('/projects');
+      setProjects(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      setProjects([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { fetchProjects(); }, []);
@@ -43,16 +43,12 @@ const ProjectManager = () => {
     e.preventDefault();
     setSaving(true);
     try {
-      const isUpdate = !!(editingProject._id || editingProject.id);
-      const method = isUpdate ? 'PATCH' : 'POST';
       const id = editingProject._id || editingProject.id;
-      const url = isUpdate ? `${API}/${id}` : API;
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editingProject)
-      });
-      if (!res.ok) throw new Error('Failed');
+      if (id) {
+        await api.patch(`/projects/${id}`, editingProject);
+      } else {
+        await api.post('/projects', editingProject);
+      }
       setShowModal(false);
       fetchProjects();
     } catch (err) {
@@ -64,8 +60,12 @@ const ProjectManager = () => {
 
   const deleteProject = async (id) => {
     if (!window.confirm('هل تريد حذف هذا المشروع؟')) return;
-    await fetch(`${API}/${id}`, { method: 'DELETE' });
-    fetchProjects();
+    try {
+      await api.delete(`/projects/${id}`);
+      fetchProjects();
+    } catch (err) {
+      alert('خطأ في الحذف');
+    }
   };
 
   const handleImageUpload = async (e, isMain = false) => {
@@ -76,11 +76,10 @@ const ProjectManager = () => {
     files.forEach(file => formData.append('images', file));
 
     try {
-      const res = await fetch(UPLOAD_API, {
-        method: 'POST',
-        body: formData
+      const res = await api.post('/apartments/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-      const data = await res.json();
+      const data = res.data;
       if (data.urls) {
         if (isMain) {
           setEditingProject({
@@ -137,6 +136,7 @@ const ProjectManager = () => {
 
   const getImageUrl = (url) => {
     if (!url) return '';
+    const API_BASE = import.meta.env.VITE_API_URL || '';
     return url.startsWith('http') ? url : `${API_BASE}${url}`;
   };
 

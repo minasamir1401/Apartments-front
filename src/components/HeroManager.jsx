@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Save, RefreshCcw, Image as ImageIcon, Type, Layout, Sparkles, Link as LinkIcon, Upload, Trash2, Plus, ArrowLeft, ArrowRight, X } from 'lucide-react';
 
-const API_BASE = import.meta.env.VITE_API_URL || '';
-const API = `${API_BASE}/api/hero`;
-const SERVER_URL = API_BASE; 
-
+const SERVER_URL = import.meta.env.VITE_API_URL || '';
 const HeroManager = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +21,7 @@ const HeroManager = () => {
 
   const fetchSlides = async () => {
     try {
-      const res = await axios.get(API);
+      const res = await api.get('/hero');
       // Ensure res.data is an array. If it's a single object, wrap it.
       if (Array.isArray(res.data)) {
         setSlides(res.data);
@@ -65,8 +62,8 @@ const HeroManager = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('هل أنت متأكد من حذف هذا السلايد؟')) return;
     try {
-      await axios.delete(`${API}/${id}`);
-      setSlides(prev => prev.filter(s => s.id !== id));
+      await api.delete(`/hero/${id}`);
+      setSlides(prev => prev.filter(s => (s.id || s._id) !== id));
     } catch (err) {
       alert('خطأ في الحذف');
     }
@@ -108,15 +105,16 @@ const HeroManager = () => {
         formData.append('imageFile', selectedFile);
       }
 
-      if (editingSlide.id) {
+      if (editingSlide.id || editingSlide._id) {
         // Update
-        const res = await axios.put(`${API}/${editingSlide.id}`, formData, {
+        const id = editingSlide.id || editingSlide._id;
+        const res = await api.put(`/hero/${id}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
-        setSlides(prev => prev.map(s => s.id === editingSlide.id ? res.data : s));
+        setSlides(prev => prev.map(s => (s.id || s._id) === id ? res.data : s));
       } else {
         // Create
-        const res = await axios.post(API, formData, {
+        const res = await api.post('/hero', formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
         setSlides(prev => [...prev, res.data]);

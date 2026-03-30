@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, ArrowLeft, X, ChevronRight, ChevronLeft, Image as ImageIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const Projects = () => {
   const { t, i18n } = useTranslation();
@@ -56,6 +57,18 @@ const Projects = () => {
 
   return (
     <div className="min-h-screen bg-surface pt-32 pb-24">
+      <SEO
+        title={isEn ? 'Latest Real Estate Projects in Egypt | Red Gate' : 'أحدث المشاريع العقارية في مصر | ريد غيت'}
+        description={isEn ? 'Explore Red Gate\'s portfolio of exceptional real estate projects in Egypt. El Gouna, Hurghada, New Cairo - luxury living and investment opportunities.' : 'استكشف محفظة ريد غيت من المشاريع العقارية في مصر. الجونة، الغردقة، القاهرة الجديدة - فرص استثمارية وسكنية فاخرة.'}
+        url="https://red-gate.tech/projects"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          "name": "مشاريع ريد غيت العقارية",
+          "url": "https://red-gate.tech/projects",
+          "description": "جميع مشاريع ريد غيت العقارية في مصر"
+        }}
+      />
       <div className="container mx-auto px-6">
         
         {/* Header Section */}

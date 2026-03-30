@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, User, LogIn } from 'lucide-react';
+import api from '../utils/api';
 
 const AdminLogin = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -15,8 +15,7 @@ const AdminLogin = () => {
     setLoading(true);
     setError('');
     try {
-      const API_BASE = import.meta.env.VITE_API_URL || '';
-      const res = await axios.post(`${API_BASE}/api/admin/login`, formData);
+      const res = await api.post('/admin/login', formData);
       localStorage.setItem('adminToken', res.data.token);
       navigate('/admin/dashboard');
     } catch (err) {

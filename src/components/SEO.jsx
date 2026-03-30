@@ -1,50 +1,52 @@
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from 'react-i18next';
 
-const SEO = ({ 
-  title, 
-  description, 
-  keywords, 
-  image, 
-  canonical, 
-  type = 'website' 
+/**
+ * SEO Component - Use this on every page
+ * @param {string} title - Page title
+ * @param {string} description - Page description
+ * @param {string} url - Full canonical URL (e.g. https://red-gate.tech/apartments)
+ * @param {string} image - OG image URL
+ * @param {string} type - OG type (website, article, etc.)
+ * @param {object} schema - Optional JSON-LD schema object
+ */
+const SEO = ({
+  title = 'Red Gate Egypt | ريد غيت للعقارات الفاخرة',
+  description = 'ريد غيت للعقارات - المنصة الأولى للعقارات الفاخرة في مصر. شقق ومشاريع راقية في الجونة والغردقة والقاهرة الجديدة.',
+  url = 'https://red-gate.tech',
+  image = 'https://red-gate.tech/og-image.jpg',
+  type = 'website',
+  schema = null,
 }) => {
-  const { i18n } = useTranslation();
-  const lang = i18n.language;
-  const siteName = lang === 'ar' ? 'ريد غيت | Red Gate Egypt' : 'Red Gate | Luxury Real Estate Egypt';
-  const fullTitle = title ? `${title} | ${siteName}` : siteName;
-  const defaultDesc = lang === 'ar' 
-    ? 'ريد غيت هي المنصة الأولى للعقارات الفاخرة في مصر والجونة والغردقة والقاهرة الجديدة.'
-    : 'Red Gate is the premier luxury real estate platform in Egypt, El Gouna, Hurghada, and New Cairo.';
-  
-  const currentUrl = canonical || window.location.href;
-  const defaultImage = 'https://redgate-egypt.com/og-image.jpg'; // Path to your OG image
+  const fullTitle = title.includes('Red Gate') ? title : `${title} | Red Gate Egypt`;
 
   return (
     <Helmet>
-      {/* Basic Meta Tags */}
+      {/* Basic */}
       <title>{fullTitle}</title>
-      <meta name="description" content={description || defaultDesc} />
-      <meta name="keywords" content={keywords || 'Red Gate, ريد غيت, عقارات مصر, Luxury Real Estate Egypt, El Gouna, Hurghada'} />
-      <link rel="canonical" href={currentUrl} />
+      <meta name="description" content={description} />
+      <link rel="canonical" href={url} />
 
-      {/* Open Graph / Facebook */}
-      <meta property="og:type" content={type} />
+      {/* Open Graph */}
       <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description || defaultDesc} />
-      <meta property="og:image" content={image || defaultImage} />
-      <meta property="og:url" content={currentUrl} />
-      <meta property="og:site_name" content={siteName} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content={url} />
+      <meta property="og:image" content={image} />
+      <meta property="og:type" content={type} />
+      <meta property="og:site_name" content="Red Gate Egypt" />
+      <meta property="og:locale" content="ar_EG" />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={description || defaultDesc} />
-      <meta name="twitter:image" content={image || defaultImage} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={image} />
 
-      {/* Language Alternates */}
-      <link rel="alternate" href={currentUrl} hrefLang={lang} />
+      {/* Structured Data */}
+      {schema && (
+        <script type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      )}
     </Helmet>
   );
 };
