@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 const PropertyCard = ({ property, onClick }) => {
   const { t, i18n } = useTranslation();
   const isEn = i18n.language === 'en';
-  const SERVER_URL = import.meta.env.VITE_API_URL || '';
+  const SERVER_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
   const mainImage = property.images?.[0]?.startsWith('/uploads') 
     ? `${SERVER_URL}${property.images[0]}` 
     : property.images?.[0];

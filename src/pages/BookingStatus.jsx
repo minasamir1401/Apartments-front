@@ -18,7 +18,7 @@ const BookingStatus = () => {
     setError('');
     setResults(null);
     try {
-      const API_BASE = import.meta.env.VITE_API_URL || '';
+      const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
       const res = await axios.get(`${API_BASE}/api/bookings`);
       const filtered = res.data.filter(b => b.phone === phoneNum);
       setResults(filtered);

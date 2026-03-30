@@ -136,7 +136,7 @@ const ProjectManager = () => {
 
   const getImageUrl = (url) => {
     if (!url) return '';
-    const API_BASE = import.meta.env.VITE_API_URL || '';
+    const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
     return url.startsWith('http') ? url : `${API_BASE}${url}`;
   };
 

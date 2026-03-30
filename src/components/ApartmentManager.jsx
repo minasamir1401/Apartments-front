@@ -109,7 +109,7 @@ const ApartmentManager = () => {
     setNewImageUrl('');
   };
 
-  const SERVER_URL = import.meta.env.VITE_API_URL || '';
+  const SERVER_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
   const getFullImg = (url) => url?.startsWith('/uploads') ? `${SERVER_URL}${url}` : url;
 
   return (

@@ -105,7 +105,7 @@ const AqarSearch = ({ areas = [] }) => {
             <button 
               key={idx}
               onClick={() => { setSearchTerm(areaName); handleSearch(); }}
-              className="px-5 py-2 bg-on-surface/10 backdrop-blur-md text-on-surface text-sm font-bold rounded-full border border-outline-variant hover:bg-on-surface/20 transition-all font-cairo"
+              className="px-5 py-2 bg-on-surface/10 backdrop-blur-md text-white text-sm font-bold rounded-full border border-outline-variant hover:bg-on-surface/20 transition-all font-cairo"
             >
               {areaName}
             </button>

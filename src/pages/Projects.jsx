@@ -15,7 +15,7 @@ const Projects = () => {
   const [selectedGallery, setSelectedGallery] = useState(null);
   const [currentImgIdx, setCurrentImgIdx] = useState(0);
 
-  const API_BASE = import.meta.env.VITE_API_URL || '';
+  const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 
   useEffect(() => {
     const fetchProjects = async () => {

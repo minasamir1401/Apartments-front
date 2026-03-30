@@ -12,6 +12,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Projects from './pages/Projects';
 import ProjectDetails from './pages/ProjectDetails';
+import Chatbot from './components/Chatbot';
 
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -36,6 +37,7 @@ function App() {
           </Routes>
         </main>
         <Footer />
+        <Chatbot />
       </div>
     </Router>
     </HelmetProvider>

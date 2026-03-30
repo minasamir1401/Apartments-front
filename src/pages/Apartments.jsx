@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -23,7 +23,10 @@ const Apartments = () => {
     const fetchApts = async () => {
       setLoading(true);
       try {
-        const API_BASE = import.meta.env.VITE_API_URL || '';
+        let API_BASE = import.meta.env.VITE_API_URL || '';
+        if (API_BASE.endsWith('/')) {
+          API_BASE = API_BASE.slice(0, -1);
+        }
         const res = await axios.get(`${API_BASE}/api/apartments${location.search}`);
         setApartments(res.data);
       } catch (err) {
@@ -81,25 +84,35 @@ const Apartments = () => {
               </p>
               
               {/* Filter Tabs */}
-              <div className="flex flex-wrap gap-2 mb-10">
-                <button 
-                  onClick={() => navigate('/apartments')}
-                  className={`px-8 py-3 rounded-2xl font-black transition-all ${filter === 'all' ? 'bg-primary text-on-primary shadow-lg' : 'bg-surface-container text-on-surface hover:bg-primary/10'}`}
+              <div className="flex flex-wrap items-center gap-4 mb-10">
+                <div className="flex flex-wrap gap-2">
+                  <button 
+                    onClick={() => navigate('/apartments')}
+                    className={`px-8 py-3 rounded-2xl font-black transition-all ${filter === 'all' ? 'bg-primary text-on-primary shadow-lg' : 'bg-surface-container text-on-surface hover:bg-primary/10'}`}
+                  >
+                    {t('filter_all')}
+                  </button>
+                  <button 
+                    onClick={() => navigate('/apartments?category=buy')}
+                    className={`px-8 py-3 rounded-2xl font-black transition-all ${filter === 'buy' ? 'bg-primary text-on-primary shadow-lg' : 'bg-surface-container text-on-surface hover:bg-primary/10'}`}
+                  >
+                    {t('search_buy')}
+                  </button>
+                  <button 
+                    onClick={() => navigate('/apartments?category=rent')}
+                    className={`px-8 py-3 rounded-2xl font-black transition-all ${filter === 'rent' ? 'bg-primary text-on-primary shadow-lg' : 'bg-surface-container text-on-surface hover:bg-primary/10'}`}
+                  >
+                    {t('search_rent')}
+                  </button>
+                </div>
+                
+                <Link 
+                  to="/projects"
+                  className="font-black text-sm uppercase tracking-wide flex items-center gap-2 transition-all hover:text-primary text-on-surface border-r pr-4 border-outline-variant/30"
                 >
-                  {t('filter_all')}
-                </button>
-                <button 
-                  onClick={() => navigate('/apartments?category=buy')}
-                  className={`px-8 py-3 rounded-2xl font-black transition-all ${filter === 'buy' ? 'bg-primary text-on-primary shadow-lg' : 'bg-surface-container text-on-surface hover:bg-primary/10'}`}
-                >
-                  {t('search_buy')}
-                </button>
-                <button 
-                  onClick={() => navigate('/apartments?category=rent')}
-                  className={`px-8 py-3 rounded-2xl font-black transition-all ${filter === 'rent' ? 'bg-primary text-on-primary shadow-lg' : 'bg-surface-container text-on-surface hover:bg-primary/10'}`}
-                >
-                  {t('search_rent')}
-                </button>
+                  <Building2 size={18} />
+                  {t('nav_projects') || 'مشاريعنا'}
+                </Link>
               </div>
            </div>
         </div>

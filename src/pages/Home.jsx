@@ -8,7 +8,7 @@ import AqarSearch from '../components/AqarSearch';
 import PropertyCard from '../components/PropertyCard';
 import SEO from '../components/SEO';
 
-const API_BASE = import.meta.env.VITE_API_URL || '';
+const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 const API = `${API_BASE}/api/hero`;
 const SERVER_URL = API_BASE; 
 

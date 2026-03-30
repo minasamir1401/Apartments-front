@@ -3,7 +3,7 @@ import api from '../utils/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Save, RefreshCcw, Image as ImageIcon, Type, Layout, Sparkles, Link as LinkIcon, Upload, Trash2, Plus, ArrowLeft, ArrowRight, X } from 'lucide-react';
 
-const SERVER_URL = import.meta.env.VITE_API_URL || '';
+const SERVER_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 const HeroManager = () => {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);

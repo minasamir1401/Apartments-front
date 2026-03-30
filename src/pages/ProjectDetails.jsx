@@ -26,7 +26,7 @@ const ProjectDetails = () => {
     notes: ''
   });
 
-  const API_BASE = import.meta.env.VITE_API_URL || '';
+  const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
   const WHATSAPP_NUMBER = '01203311567';
 
   useEffect(() => {
