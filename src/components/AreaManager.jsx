@@ -31,13 +31,36 @@ const AreaManager = () => {
       } else {
         await api.post('/areas', editingArea);
       }
-      if (!res.ok) throw new Error('Failed');
       setShowModal(false);
       fetchAreas();
     } catch (err) {
       alert('❌ خطأ في الحفظ');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('images', file);
+
+    try {
+      const res = await api.post('/apartments/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (res.data && res.data.urls && res.data.urls[0]) {
+        setEditingArea({ ...editingArea, image: res.data.urls[0] });
+      }
+    } catch (err) {
+      alert('خطأ في الرفع');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -110,8 +133,26 @@ const AreaManager = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-bold mb-2 pr-2 flex items-center gap-2"><Image size={18}/> رابط الصورة</label>
-                <input className="input-field h-14 text-sm font-bold" value={editingArea.image} onChange={e => setEditingArea({...editingArea, image: e.target.value})} placeholder="https://images.unsplash.com/..." required />
+                <label className="block text-sm font-bold mb-2 pr-2 flex items-center gap-2">
+                  <Image size={18}/> {isUploading ? '⏳ جاري الرفع...' : 'صورة المنطقة'}
+                </label>
+                <div className="flex flex-col gap-3">
+                  <div className="flex gap-2">
+                    <input className="input-field h-14 text-sm font-bold flex-1" value={editingArea.image} onChange={e => setEditingArea({...editingArea, image: e.target.value})} placeholder="رابط الصورة أو ارفعها من اليسار..." required />
+                    <div className="relative">
+                      <input type="file" accept="image/*" onChange={handleFileUpload} className="absolute inset-0 opacity-0 cursor-pointer" disabled={isUploading} title="رفع صورة" />
+                      <button type="button" className="btn-primary h-14 w-14 flex items-center justify-center p-0 rounded-xl">
+                        <Image size={24} />
+                      </button>
+                    </div>
+                  </div>
+                  {editingArea.image && (
+                    <div className="relative aspect-video rounded-2xl overflow-hidden border border-neutral-200">
+                      <img src={editingArea.image.startsWith('/uploads') ? `${(import.meta.env.VITE_API_URL || '').replace(/\/$/, '')}${editingArea.image}` : editingArea.image} className="w-full h-full object-cover" alt="Preview" />
+                      <button type="button" onClick={() => setEditingArea({...editingArea, image: ''})} className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"><X size={16}/></button>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <button type="submit" disabled={saving} className="btn-primary w-full h-16 text-xl flex justify-center items-center gap-3 shadow-xl mt-4">

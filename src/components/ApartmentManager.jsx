@@ -46,7 +46,6 @@ const ApartmentManager = () => {
       } else {
         await api.post('/apartments', editingApt);
       }
-      if (!res.ok) throw new Error('Failed');
       setShowModal(false);
       fetchApts();
       alert('✅ تم الحفظ بنجاح!');
@@ -79,10 +78,13 @@ const ApartmentManager = () => {
     setEditingApt({ ...editingApt, amenities });
   };
 
+  const [isUploading, setIsUploading] = useState(false);
+
   const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
+    setIsUploading(true);
     const formData = new FormData();
     files.forEach(file => formData.append('images', file));
 
@@ -96,6 +98,8 @@ const ApartmentManager = () => {
       }
     } catch (err) {
       alert('خطأ في الرفع');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -291,8 +295,12 @@ const ApartmentManager = () => {
                       <div className="p-3 bg-surface rounded-2xl group-hover:bg-primary/10 transition-colors">
                         <Plus className="text-on-surface-variant group-hover:text-primary" />
                       </div>
-                      <span className="text-xs md:text-sm font-bold text-on-surface-variant">اضغط لرفع الصور من جهازك</span>
-                      <span className="text-[10px] md:text-xs text-on-surface-variant/60">يمكنك اختيار أكثر من صورة (حتى 5 ميجا)</span>
+                      <span className="text-xs md:text-sm font-bold text-on-surface-variant">
+                        {isUploading ? '⏳ جاري الرفع... الرجاء الانتظار' : 'اضغط لرفع الصور من جهازك'}
+                      </span>
+                      <span className="text-[10px] md:text-xs text-on-surface-variant/60">
+                        {isUploading ? 'جاري السحب والرفع للسيرفر...' : '(لرفع صور متعددة حددها كلها معاً)'}
+                      </span>
                     </div>
                   </div>
 

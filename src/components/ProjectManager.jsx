@@ -68,10 +68,13 @@ const ProjectManager = () => {
     }
   };
 
+  const [isUploading, setIsUploading] = useState(false);
+
   const handleImageUpload = async (e, isMain = false) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
 
+    setIsUploading(true);
     const formData = new FormData();
     files.forEach(file => formData.append('images', file));
 
@@ -95,6 +98,8 @@ const ProjectManager = () => {
       }
     } catch (err) {
       alert('Upload failed');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -227,8 +232,10 @@ const ProjectManager = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                   <div className="space-y-4">
                     <div className="flex flex-col gap-2">
-                      <p className="text-xs font-bold text-neutral-500">رفع صورة من الجهاز</p>
-                      <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, true)} className="block w-full text-sm text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-primary file:text-white hover:file:bg-primary-light transition-all" />
+                      <p className="text-xs font-bold text-neutral-500">
+                        {isUploading ? '⏳ جاري رفع الصورة الرئيسية...' : 'رفع صورة من الجهاز'}
+                      </p>
+                      <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, true)} disabled={isUploading} className="block w-full text-sm text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-primary file:text-white hover:file:bg-primary-light transition-all disabled:opacity-50 disabled:cursor-wait" />
                     </div>
                     <div className="relative">
                       <p className="text-xs font-bold text-neutral-500 mb-2">أو رابط صورة مباشرة</p>
@@ -328,8 +335,10 @@ const ProjectManager = () => {
                 
                 <div className="flex flex-col md:flex-row gap-4 mb-6">
                   <div className="flex-1">
-                    <p className="text-xs font-bold text-neutral-500 mb-2">رفع صور متعددة</p>
-                    <input type="file" multiple accept="image/*" onChange={(e) => handleImageUpload(e, false)} className="block w-full text-sm text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-neutral-800 file:text-white hover:file:bg-black transition-all" />
+                    <p className="text-xs font-bold text-neutral-500 mb-2">
+                      {isUploading ? '⏳ جاري الرفع للسيرفر...' : 'رفع صور متعددة'}
+                    </p>
+                    <input type="file" multiple accept="image/*" onChange={(e) => handleImageUpload(e, false)} disabled={isUploading} className="block w-full text-sm text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-neutral-800 file:text-white hover:file:bg-black transition-all disabled:opacity-50 disabled:cursor-wait" />
                   </div>
                   <div className="flex-1">
                     <p className="text-xs font-bold text-neutral-500 mb-2">إضافة صورة برابط</p>
