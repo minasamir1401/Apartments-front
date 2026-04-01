@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MapPin, BedDouble, Bath, Square, Heart, Share2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 const PropertyCard = ({ property, onClick }) => {
   const { t, i18n } = useTranslation();
   const isEn = i18n.language === 'en';
+  const [imgLoaded, setImgLoaded] = useState(false);
   const SERVER_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
   const mainImage = property.images?.[0]?.startsWith('/uploads') 
     ? `${SERVER_URL}${property.images[0]}` 
@@ -19,15 +20,29 @@ const PropertyCard = ({ property, onClick }) => {
       className="group bg-surface rounded-[1.5rem] overflow-hidden border border-outline-variant/10 hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col h-full"
       onClick={onClick}
     >
-      {/* Image Section */}
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <img 
-          src={mainImage} 
-          alt={property.title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-        />
+      {/* Image Section — explicit 4:3 prevents CLS */}
+      <div className="relative w-full" style={{ aspectRatio: '4/3' }}>
+        {/* Skeleton shown until image loads */}
+        {!imgLoaded && (
+          <div className="absolute inset-0 bg-neutral-200 animate-pulse" />
+        )}
+        {mainImage && (
+          <img 
+            src={mainImage} 
+            alt={isEn && property.title_en ? property.title_en : property.title}
+            width={400}
+            height={300}
+            loading="lazy"
+            decoding="async"
+            onLoad={() => setImgLoaded(true)}
+            className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+          />
+        )}
         <div className="absolute top-4 right-4 flex gap-2">
-          <button className="p-2 bg-surface/20 backdrop-blur-md rounded-full text-white hover:bg-primary transition-colors">
+          <button 
+            className="p-2 bg-surface/20 backdrop-blur-md rounded-full text-white hover:bg-primary transition-colors"
+            aria-label={t('save_property') || 'حفظ العقار'}
+          >
             <Heart size={18} />
           </button>
         </div>
@@ -47,7 +62,7 @@ const PropertyCard = ({ property, onClick }) => {
         </div>
 
         <div className="flex items-center gap-1 text-on-surface-variant text-sm mb-4">
-          <MapPin size={14} className="text-primary" />
+          <MapPin size={14} className="text-primary flex-shrink-0" />
           <span className="line-clamp-1">
             {isEn && property.location_en ? property.location_en : property.location}
           </span>
@@ -76,7 +91,11 @@ const PropertyCard = ({ property, onClick }) => {
             </span>
             <span className="text-on-surface-variant text-sm font-bold mr-1">{t('currency')}</span>
           </div>
-          <button className="text-primary hover:bg-primary/5 p-2 rounded-xl transition-colors">
+          <button 
+            className="text-primary hover:bg-primary/5 p-2 rounded-xl transition-colors"
+            aria-label="مشاركة العقار"
+            onClick={(e) => { e.stopPropagation(); navigator.clipboard?.writeText(window.location.origin + '/apartments/' + property._id); }}
+          >
             <Share2 size={18} />
           </button>
         </div>

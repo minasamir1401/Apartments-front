@@ -122,7 +122,11 @@ const Home = () => {
                transition={{ duration: 10, ease: "linear" }}
                src={heroImage} 
                className="w-full h-full object-cover"
-               alt="Luxury Interior"
+               alt="Red Gate Egypt Luxury Real Estate"
+               fetchPriority="high"
+               loading="eager"
+               width={1920}
+               height={1080}
              />
              <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-black/90"></div>
           </motion.div>

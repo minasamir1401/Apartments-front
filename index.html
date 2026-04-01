@@ -84,10 +84,23 @@
     </script>
 
     <!-- ===== PERFORMANCE ===== -->
+    <!-- Non-blocking font loading to prevent render-blocking -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
-    <link rel="dns-prefetch" href="https://admin.red-gate.tech" />
+    <!-- Load fonts asynchronously: media=print trick then switch to all on load -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+    </noscript>
+    <!-- Preconnect to API to reduce latency -->
+    <link rel="preconnect" href="https://ratgate-api.red-gate.tech" />
+    <link rel="dns-prefetch" href="https://ratgate-api.red-gate.tech" />
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
 
     <!-- ===== PWA / MOBILE ===== -->
     <meta name="theme-color" content="#C9A84C" />
