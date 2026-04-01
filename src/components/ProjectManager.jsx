@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, X, Save, Image, RefreshCw, Link as LinkIcon, Upload, Trash, MapPin, Building2 } from 'lucide-react';
 import api from '../utils/api';
+import GoogleMapEmbed from './GoogleMapEmbed';
 
 const EMPTY_PROJECT = { 
   title: '', 
@@ -227,8 +228,18 @@ const ProjectManager = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-bold mb-2 text-primary">رابط الخريطة (Google Maps Link)</label>
-                <input className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:border-primary outline-none" value={editingProject.map_link || ''} onChange={e => setEditingProject({...editingProject, map_link: e.target.value})} placeholder="https://maps.app.goo.gl/..." />
+                <label className="block text-sm font-black mb-2 text-primary">رابط الخريطة (Google Maps Link / Embed)</label>
+                <input className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:border-primary outline-none" value={editingProject.map_link || ''} onChange={e => setEditingProject({...editingProject, map_link: e.target.value})} placeholder="الصق رابط الموقع أو كود iframe هنا" />
+                {editingProject.map_link && (
+                  <div className="mt-4 border border-primary/20 rounded-[1.5rem] overflow-hidden bg-neutral-100 p-2">
+                    <p className="text-[10px] font-black text-primary mb-2 flex items-center gap-1 uppercase italic px-4">
+                       <MapPin size={10} /> معاينة الموقع المباشرة
+                    </p>
+                    <div className="h-[200px] rounded-xl overflow-hidden">
+                       <GoogleMapEmbed link={editingProject.map_link} title="Project Map Preview" />
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="bg-neutral-50 p-6 rounded-[2rem] border border-neutral-200">

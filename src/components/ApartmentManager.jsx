@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, X, Check, Save, Image, Link } from 'lucide-react';
+import { Plus, Edit, Trash2, X, Check, Save, Image, Link, MapPin } from 'lucide-react';
 import api from '../utils/api';
+import GoogleMapEmbed from './GoogleMapEmbed';
 
 const AMENITIES_OPTIONS = [
   { id: 'wifi', label: 'واي فاي 5G', iconName: 'Wifi' },
@@ -266,8 +267,18 @@ const ApartmentManager = () => {
                     className="input-field h-12 md:h-14 text-sm font-bold" 
                     value={editingApt.map_link || ''}
                     onChange={e => setEditingApt({ ...editingApt, map_link: e.target.value })}
-                    placeholder="ضع رابط Location هنا (مثل: https://maps.app.goo.gl/...)"
+                    placeholder="ضع رابط Location هنا أو كود الـ Embed (<iframe>...)"
                   />
+                  {editingApt.map_link && (
+                    <div className="mt-4 border-2 border-primary/20 rounded-[2rem] overflow-hidden shadow-inner bg-neutral-100 p-2">
+                       <p className="text-[10px] font-bold text-primary mb-2 flex items-center gap-1 uppercase italic px-4 mt-2">
+                          <MapPin size={10} /> معاينة الموقع المباشرة
+                       </p>
+                       <div className="h-[200px] rounded-[1.5rem] overflow-hidden">
+                          <GoogleMapEmbed link={editingApt.map_link} title="Preview Map" />
+                       </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

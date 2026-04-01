@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, ArrowRight, X, ChevronRight, ChevronLeft, MapPin, Ruler, Tag, Phone, CalendarCheck, Plus, CheckCircle2, User, Send } from 'lucide-react';
 import SEO from '../components/SEO';
+import GoogleMapEmbed from '../components/GoogleMapEmbed';
 
 const ProjectDetails = () => {
   const { id } = useParams();
@@ -289,18 +290,11 @@ const ProjectDetails = () => {
                  <MapPin size={24} className="text-primary"/> 
                  {isEn ? 'Project Location' : 'موقع المشروع'}
                </h4>
-               <p className="font-bold text-on-surface-variant leading-relaxed">
+               <p className="font-bold text-on-surface-variant leading-relaxed mb-6">
                  {isEn ? (project.location_en || project.location || 'New Cairo, Egypt') : (project.location || project.location_en || 'القاهرة الجديدة، مصر')}
                </p>
                {project.map_link && (
-                 <a 
-                   href={project.map_link} 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   className="mt-4 flex items-center justify-center gap-2 w-full py-3 bg-primary/5 text-primary border border-primary/20 rounded-2xl font-black hover:bg-primary hover:text-white transition-all shadow-sm"
-                 >
-                   <MapPin size={16} /> {t('view_on_map')}
-                 </a>
+                 <GoogleMapEmbed link={project.map_link} title={isEn ? project.title_en : project.title} />
                )}
             </div>
 

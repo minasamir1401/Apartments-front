@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 
 import SEO from '../components/SEO';
+import GoogleMapEmbed from '../components/GoogleMapEmbed';
 
 const ICON_MAP = { Wifi, Wind, ChefHat, Tv, Car, ShieldCheck, Coffee, CheckCircle };
 
@@ -194,6 +195,12 @@ const ApartmentDetails = () => {
                 <p className="text-on-surface-variant leading-relaxed text-lg font-bold whitespace-pre-wrap">
                    {currentDesc}
                 </p>
+                {apt.map_link && (
+                  <div className="mt-12">
+                     <h3 className="text-2xl font-black text-on-surface mb-6 italic underline decoration-primary/30 decoration-8 underline-offset-8">{isEn ? 'Location' : 'الموقع على الخريطة'}</h3>
+                     <GoogleMapEmbed link={apt.map_link} title={currentTitle} />
+                  </div>
+                )}
              </div>
 
              <div className="mb-16">
