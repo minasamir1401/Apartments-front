@@ -111,7 +111,7 @@ const Apartments = () => {
                   className="font-black text-sm uppercase tracking-wide flex items-center gap-2 transition-all hover:text-primary text-on-surface border-r pr-4 border-outline-variant/30"
                 >
                   <Building2 size={18} />
-                  {t('nav_projects') || 'مشاريعنا'}
+                  {t('our_projects')}
                 </Link>
               </div>
            </div>

@@ -61,7 +61,7 @@ const Navbar = () => {
   const navLinks = [
     { to: "/", label: t('nav_home'), icon: <Home size={18} /> },
     { to: "/apartments", label: t('nav_explore'), icon: <Search size={18} /> },
-    { to: "/projects", label: isEn ? 'Projects' : 'مشاريعنا', icon: <Building2 size={18} /> },
+    { to: "/projects", label: t('our_projects'), icon: <Building2 size={18} /> },
     { to: "/rules", label: t('nav_guide'), icon: <Info size={18} /> },
     { to: "/status", label: t('nav_status'), icon: <Calendar size={18} /> },
   ];

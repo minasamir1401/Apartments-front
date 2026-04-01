@@ -15,7 +15,7 @@ const SEO = ({
   description = 'ريد غيت للعقارات - المنصة الأولى للعقارات الفاخرة في مصر. شقق ومشاريع راقية في الجونة والغردقة والقاهرة الجديدة.',
   keywords = 'Red Gate Egypt, ريد غيت, عقارات مصر, شقق فاخرة, مشاريع سكنية, الجونة, الغردقة, القاهرة الجديدة, Luxury Real Estate Egypt',
   url = 'https://red-gate.tech',
-  image = 'https://red-gate.tech/og-image.jpg',
+  image = 'https://red-gate.tech/favicon.jpg',
   type = 'website',
   schema = null,
 }) => {
@@ -42,8 +42,8 @@ const SEO = ({
       <meta property="og:description" content={truncatedDesc} />
       <meta property="og:url" content={url} />
       <meta property="og:image" content={image} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
+      <meta property="og:image:width" content="320" />
+      <meta property="og:image:height" content="320" />
       <meta property="og:type" content={type} />
       <meta property="og:site_name" content="Red Gate Egypt | ريد غيت" />
       <meta property="og:locale" content="ar_EG" />

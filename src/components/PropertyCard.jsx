@@ -9,9 +9,12 @@ const PropertyCard = ({ property, onClick, linkUrl }) => {
   const isEn = i18n.language === 'en';
   const [imgLoaded, setImgLoaded] = useState(false);
   const SERVER_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
-  const mainImage = property.images?.[0]?.startsWith('/uploads') 
-    ? `${SERVER_URL}${property.images[0]}` 
-    : property.images?.[0];
+  const firstImage = property.images?.[0];
+  const mainImage = !firstImage
+    ? null
+    : firstImage.startsWith('http') || firstImage.startsWith('data:')
+    ? firstImage
+    : `${SERVER_URL}${firstImage.startsWith('/') ? firstImage : '/' + firstImage}`;
 
   const cardContent = (
     <motion.div 
