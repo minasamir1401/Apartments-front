@@ -58,15 +58,22 @@ const Projects = () => {
   return (
     <div className="min-h-screen bg-surface pt-32 pb-24">
       <SEO
-        title={isEn ? 'Latest Real Estate Projects in Egypt | Red Gate' : 'أحدث المشاريع العقارية في مصر | ريد غيت'}
-        description={isEn ? 'Explore Red Gate\'s portfolio of exceptional real estate projects in Egypt. El Gouna, Hurghada, New Cairo - luxury living and investment opportunities.' : 'استكشف محفظة ريد غيت من المشاريع العقارية في مصر. الجونة، الغردقة، القاهرة الجديدة - فرص استثمارية وسكنية فاخرة.'}
+        title={isEn ? 'Luxury Real Estate Projects in Egypt | Red Gate Egypt' : 'مشاريع سكنية فاخرة في مصر | ريد غيت'}
+        description={isEn ? "Explore Red Gate's premium real estate projects in El Gouna, Hurghada, and New Cairo Egypt. Luxury units for sale with easy payment plans." : "اكتشف مشاريع ريد غيت العقارية الفاخرة في الجونة والغردقة والقاهرة الجديدة. وحدات سكنية راقية للبيع بأنظمة سداد مرنة."}
+        keywords={isEn ? "Red Gate Projects, Luxury Egypt Projects, El Gouna Real Estate, Hurghada Projects, New Cairo Compounds" : "مشاريع ريد غيت, مشاريع سكنية مصر, عقارات الجونة, مشاريع الغردقة, كمبوندات القاهرة الجديدة"}
         url="https://red-gate.tech/projects"
         schema={{
           "@context": "https://schema.org",
           "@type": "ItemList",
-          "name": "مشاريع ريد غيت العقارية",
+          "name": isEn ? "Red Gate Egypt Real Estate Projects" : "مشاريع ريد غيت العقارية",
           "url": "https://red-gate.tech/projects",
-          "description": "جميع مشاريع ريد غيت العقارية في مصر"
+          "description": isEn ? "All Red Gate real estate projects in Egypt" : "جميع مشاريع ريد غيت العقارية في مصر",
+          "itemListElement": projects.slice(0, 10).map((p, i) => ({
+            "@type": "ListItem",
+            "position": i + 1,
+            "url": `https://red-gate.tech/projects/${p._id}`,
+            "name": p.title
+          }))
         }}
       />
       <div className="container mx-auto px-6">

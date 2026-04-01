@@ -78,34 +78,32 @@ const Home = () => {
   return (
     <div className="overflow-hidden" style={{backgroundColor: 'var(--color-surface)'}}>
       <SEO 
-        title={t('nav_home')} 
-        description={t('hero_subtitle')}
-        keywords="Red Gate, ريد غيت, عقارات مصر, Luxury Properties Egypt, Hurghada, El Gouna"
-      />
-
-      <script type="application/ld+json">
-        {JSON.stringify({
+        title="Red Gate Egypt | ريد غيت للعقارات الفاخرة في مصر"
+        description="ريد غيت للعقارات - المنصة الأولى للعقارات الفاخرة في مصر. اعثر على شقتك المثالية في الجونة، الغردقة، والقاهرة الجديدة. Red Gate Egypt – Find luxury properties for sale and rent."
+        keywords="Red Gate Egypt, ريد غيت, red-gate.tech, عقارات مصر, شقق فاخرة للبيع, شقق للإيجار, مشاريع سكنية, الجونة, الغردقة, القاهرة الجديدة, New Cairo, El Gouna, Hurghada, Luxury Real Estate Egypt"
+        url="https://red-gate.tech"
+        image="https://red-gate.tech/og-image.jpg"
+        schema={{
           "@context": "https://schema.org",
           "@type": "RealEstateAgent",
-          "name": "Red Gate Egypt | ريد غيت",
-          "image": "https://redgate-egypt.com/logo.png",
-          "url": "https://redgate-egypt.com",
+          "name": "Red Gate Egypt",
+          "alternateName": "ريد غيت للعقارات",
+          "url": "https://red-gate.tech",
+          "logo": "https://red-gate.tech/favicon.jpg",
+          "image": "https://red-gate.tech/og-image.jpg",
+          "description": "المنصة الأولى للعقارات الفاخرة في مصر - شقق ومشاريع راقية في الجونة والغردقة والقاهرة الجديدة",
           "telephone": "+201203311567",
           "address": {
             "@type": "PostalAddress",
-            "streetAddress": "New Cairo",
-            "addressLocality": "Cairo",
-            "addressCountry": "EG"
+            "addressCountry": "EG",
+            "addressRegion": "Red Sea"
           },
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": 30.0444,
-            "longitude": 31.2357
-          },
-          "priceRange": "$$$",
-          "description": "Premium luxury real estate platform in Egypt."
-        })}
-      </script>
+          "areaServed": ["El Gouna", "Hurghada", "New Cairo", "Cairo", "Egypt", "الجونة", "الغردقة", "القاهرة الجديدة"],
+          "priceRange": "$$$$",
+          "openingHours": "Mo-Su 09:00-21:00",
+          "sameAs": ["https://red-gate.tech"]
+        }}
+      />
 
       {/* 1. Cinematic Hero Entrance (Slider) */}
       <section className="relative h-screen flex items-center justify-center bg-black overflow-hidden">

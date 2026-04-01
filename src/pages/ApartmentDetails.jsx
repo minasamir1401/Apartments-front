@@ -71,31 +71,36 @@ const ApartmentDetails = () => {
   return (
     <div className="min-h-screen bg-background pb-24">
       <SEO 
-        title={currentTitle} 
-        description={currentDesc?.substring(0, 160)}
-        keywords={`${currentTitle}, ${currentLoc}, Red Gate Egypt, ريد غيت`}
-        image={getFullImg(apt.images[0])}
+        title={`${currentTitle} | ${currentLoc} | Red Gate Egypt`}
+        description={`${currentDesc?.substring(0, 120)} - احجز الآن عبر ريد غيت. ${apt.beds} غرف، ${apt.baths} حمام، مساحة ${apt.size}.`}
+        keywords={`${currentTitle}, ${currentLoc}, Red Gate Egypt, ريد غيت, عقار للبيع, شقة فاخرة, ${apt.beds} غرف, ${apt.beds} rooms Egypt`}
+        url={`https://red-gate.tech/apartments/${apt._id || apt.id}`}
+        image={getFullImg(apt.images?.[0]) || 'https://red-gate.tech/og-image.jpg'}
         type="article"
-      />
-
-      <script type="application/ld+json">
-        {JSON.stringify({
+        schema={{
           "@context": "https://schema.org",
           "@type": "Accommodation",
           "name": currentTitle,
           "description": currentDesc,
           "numberOfRooms": apt.beds,
+          "numberOfBathroomsTotal": apt.baths,
+          "floorSize": apt.size ? { "@type": "QuantitativeValue", "value": apt.size, "unitCode": "MTK" } : undefined,
+          "image": getFullImg(apt.images?.[0]),
+          "url": `https://red-gate.tech/apartments/${apt._id || apt.id}`,
           "address": {
             "@type": "PostalAddress",
-            "addressLocality": currentLoc
+            "addressLocality": currentLoc,
+            "addressCountry": "EG"
           },
           "offers": {
             "@type": "Offer",
             "price": apt.price,
-            "priceCurrency": "EGP"
+            "priceCurrency": "EGP",
+            "availability": "https://schema.org/InStock",
+            "url": `https://red-gate.tech/apartments/${apt._id || apt.id}`
           }
-        })}
-      </script>
+        }}
+      />
       
       {/* 1. Immersive Gallery Grid (Aqarmap/Airbnb Style) */}
       <section className="pt-24 md:pt-32 container mx-auto px-6">

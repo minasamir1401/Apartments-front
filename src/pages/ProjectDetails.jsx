@@ -117,8 +117,9 @@ const ProjectDetails = () => {
   return (
     <div className="min-h-screen bg-surface pb-24 pt-20" dir={isEn ? 'ltr' : 'rtl'}>
       <SEO
-        title={isEn ? (project.title_en || project.title) + ' | Red Gate Egypt' : project.title + ' | ريد غيت'}
-        description={(isEn ? (project.description_en || project.description) : project.description)?.substring(0, 160)}
+        title={`${isEn ? (project.title_en || project.title) : project.title} | ${isEn ? (project.location_en || project.location || '') : (project.location || '')} | Red Gate Egypt`}
+        description={`${(isEn ? (project.description_en || project.description) : project.description)?.substring(0, 120)} - اكتشف وحدات ${isEn ? project.title_en : project.title} مع ريد غيت مصر.`}
+        keywords={`${project.title}, ${project.title_en || ''}, ${project.location || ''}, Red Gate Egypt, ريد غيت, مشاريع سكنية مصر, وحدات للبيع, عقارات فاخرة`}
         url={`https://red-gate.tech/projects/${project._id}`}
         image={getImageUrl(project.main_image || (project.images && project.images[0]))}
         type="article"
@@ -133,7 +134,13 @@ const ProjectDetails = () => {
             "@type": "PostalAddress",
             "addressLocality": isEn ? (project.location_en || project.location) : project.location,
             "addressCountry": "EG"
-          }
+          },
+          "offers": project.unit_types?.[0] ? {
+            "@type": "Offer",
+            "price": project.unit_types[0].price,
+            "priceCurrency": "EGP",
+            "availability": "https://schema.org/InStock"
+          } : undefined
         }}
       />
       {/* Hero Section */}
