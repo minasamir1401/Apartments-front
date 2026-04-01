@@ -195,7 +195,10 @@ const Home = () => {
           <div className="flex justify-between items-end mb-16 text-right">
             <div>
                <h2 className="text-4xl md:text-6xl font-black text-on-surface mb-4">
-                  {i18n.language === 'ar' ? 'أحدث' : 'Latest'} <span className="text-primary italic">{t('our_projects')}</span>
+                  {i18n.language === 'ar' ? 'أحدث ' : 'Latest '}
+                  <span className="text-primary italic">
+                    {i18n.language === 'ar' ? 'مشاريعنا' : 'Our Projects'}
+                  </span>
                </h2>
                <p className="text-on-surface-variant text-lg font-bold">{i18n.language === 'ar' ? 'استكشف مشاريعنا السكنية الفاخرة' : 'Explore our premium residential projects'}</p>
             </div>
