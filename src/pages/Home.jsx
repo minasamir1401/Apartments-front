@@ -24,6 +24,7 @@ const Home = () => {
   }]);
   const [apartments, setApartments] = useState([]);
   const [areas, setAreas] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -31,33 +32,27 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [heroRes, aptRes, areaRes] = await Promise.all([
+        const [heroRes, aptRes, areaRes, projectRes] = await Promise.all([
           axios.get(API),
-          axios.get(`${import.meta.env.VITE_API_URL || ''}/api/apartments`),
-          axios.get(`${import.meta.env.VITE_API_URL || ''}/api/areas`)
+          axios.get(`${API_BASE}/api/apartments`),
+          axios.get(`${API_BASE}/api/areas`),
+          axios.get(`${API_BASE}/api/projects`)
         ]);
         
         if (Array.isArray(heroRes.data) && heroRes.data.length > 0) {
           setSlides(heroRes.data);
-        } else if (heroRes.data && !Array.isArray(heroRes.data)) {
-          setSlides([heroRes.data]);
-        } else {
-          setSlides([{
-            title: 'RED GATE LUXURY',
-            subtitle: 'Distinctive Quality Residences',
-            highlight: 'RED GATE',
-            image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=2000',
-            button_text: 'استعراض الوحدات',
-            button_link: '/apartments'
-          }]);
         }
 
-        if (Array.isArray(aptRes.data) && aptRes.data.length > 0) {
+        if (Array.isArray(aptRes.data)) {
           setApartments(aptRes.data.slice(0, 4));
         }
         
         if (Array.isArray(areaRes.data)) {
           setAreas(areaRes.data);
+        }
+
+        if (Array.isArray(projectRes.data)) {
+          setProjects(projectRes.data.slice(0, 4));
         }
       } catch (err) {
         console.error('Home fetchData error:', err);
@@ -77,7 +72,6 @@ const Home = () => {
     return () => clearInterval(timer);
   }, [slides.length]);
 
-  if (!Array.isArray(slides) || slides.length === 0) return null;
   const current = slides[currentSlide];
   const heroImage = current?.image?.startsWith('/uploads') ? `${SERVER_URL}${current.image}` : current?.image;
 
@@ -86,32 +80,11 @@ const Home = () => {
       <SEO 
         title="Red Gate Egypt | ريد غيت للعقارات الفاخرة في مصر"
         description="ريد غيت للعقارات - المنصة الأولى للعقارات الفاخرة في مصر. اعثر على شقتك المثالية في الجونة، الغردقة، والقاهرة الجديدة. Red Gate Egypt – Find luxury properties for sale and rent."
-        keywords="Red Gate Egypt, ريد غيت, red-gate.tech, عقارات مصر, شقق فاخرة للبيع, شقق للإيجار, مشاريع سكنية, الجونة, الغردقة, القاهرة الجديدة, New Cairo, El Gouna, Hurghada, Luxury Real Estate Egypt"
         url="https://red-gate.tech"
         image="https://red-gate.tech/og-image.jpg"
-        schema={{
-          "@context": "https://schema.org",
-          "@type": "RealEstateAgent",
-          "name": "Red Gate Egypt",
-          "alternateName": "ريد غيت للعقارات",
-          "url": "https://red-gate.tech",
-          "logo": "https://red-gate.tech/favicon.jpg",
-          "image": "https://red-gate.tech/og-image.jpg",
-          "description": "المنصة الأولى للعقارات الفاخرة في مصر - شقق ومشاريع راقية في الجونة والغردقة والقاهرة الجديدة",
-          "telephone": "+201203311567",
-          "address": {
-            "@type": "PostalAddress",
-            "addressCountry": "EG",
-            "addressRegion": "Red Sea"
-          },
-          "areaServed": ["El Gouna", "Hurghada", "New Cairo", "Cairo", "Egypt", "الجونة", "الغردقة", "القاهرة الجديدة"],
-          "priceRange": "$$$$",
-          "openingHours": "Mo-Su 09:00-21:00",
-          "sameAs": ["https://red-gate.tech"]
-        }}
       />
 
-      {/* 1. Cinematic Hero Entrance (Slider) */}
+      {/* 1. Hero Slider */}
       <section className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div 
@@ -128,11 +101,7 @@ const Home = () => {
                transition={{ duration: 10, ease: "linear" }}
                src={heroImage} 
                className="w-full h-full object-cover"
-               alt="Red Gate Egypt Luxury Real Estate"
-               fetchPriority="high"
-               loading="eager"
-               width={1920}
-               height={1080}
+               alt="Red Gate Egypt"
              />
              <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-black/90"></div>
           </motion.div>
@@ -144,11 +113,10 @@ const Home = () => {
                 key={`content-${currentSlide}`}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -30 }}
                 transition={{ duration: 0.8 }}
                 className="max-w-5xl mx-auto"
               >
-                <div className="mb-10 inline-block font-cairo text-center">
+                <div className="mb-10 inline-block text-center font-cairo">
                    <h1 className="text-4xl md:text-7xl font-black text-white leading-tight mb-4 drop-shadow-lg">
                      <Trans i18nKey="hero_title">
                        ابحث عن <span className="text-primary italic">منزلك المثالي</span> في مصر
@@ -156,26 +124,13 @@ const Home = () => {
                    </h1>
                    <p className="text-white/80 text-lg md:text-2xl font-light">{t('hero_subtitle')}</p>
                 </div>
-
                 <AqarSearch areas={areas} />
-
               </motion.div>
             </AnimatePresence>
         </div>
-
-        {slides.length > 1 && (
-          <div className="absolute inset-x-0 bottom-20 z-30 flex justify-between px-10 pointer-events-none">
-             <button onClick={() => setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length)} className="w-16 h-16 rounded-full border border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:text-black hover:border-primary transition-all pointer-events-auto">
-                <ArrowRight size={24} />
-             </button>
-             <button onClick={() => setCurrentSlide(prev => (prev + 1) % slides.length)} className="w-16 h-16 rounded-full border border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center text-white hover:bg-primary hover:text-black hover:border-primary transition-all pointer-events-auto">
-                <ArrowLeft size={24} />
-             </button>
-          </div>
-        )}
       </section>
 
-      {/* 2. Real Estate Stats & Trust (Aqarmap Style) */}
+      {/* 2. Stats Section */}
       <section className="py-12 bg-surface relative z-30 -mt-10 mx-auto max-w-6xl rounded-[3rem] shadow-xl border border-outline-variant/10">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
@@ -211,7 +166,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. Featured Cities (Browse by Area) */}
+      {/* 3. Areas Section */}
       <section className="py-24" style={{backgroundColor: 'var(--color-surface)'}}>
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 text-right">
@@ -229,38 +184,82 @@ const Home = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            {areas.length > 0 ? (
-              areas.map((area) => (
-                <motion.div 
-                  whileHover={{ y: -10 }}
-                  key={area._id || area.id} 
-                  onClick={() => navigate(`/apartments?search=${encodeURIComponent(area.name)}`)}
-                  className="relative aspect-[4/5] rounded-[3rem] overflow-hidden group cursor-pointer shadow-xl border border-outline-variant/10"
-                >
-                  <img src={area.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt={area.name} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                  <div className="absolute bottom-8 right-8 text-right">
-                    <h4 className="text-white text-2xl font-black mb-1">
-                      {t('lang') === 'ar' ? area.name : (area.name_en || area.name)}
-                    </h4>
-                    <p className="text-white/70 text-sm font-bold">
-                      {t('lang') === 'ar' ? area.count : (area.count_en || area.count)}
-                    </p>
-                  </div>
-                </motion.div>
-              ))
-            ) : (
-              // Empty state or instructions
-              <div className="col-span-full py-12 text-center text-on-surface-variant font-bold italic">
-                {t('no_areas_yet')}
-              </div>
-            )}
+            {areas.map((area) => (
+              <motion.div 
+                whileHover={{ y: -10 }}
+                key={area._id} 
+                onClick={() => navigate(`/apartments?search=${encodeURIComponent(area.name)}`)}
+                className="relative aspect-[4/5] rounded-[3rem] overflow-hidden group cursor-pointer shadow-xl border border-outline-variant/10"
+              >
+                <img src={area.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt={area.name} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div className="absolute bottom-8 right-8 text-right">
+                  <h4 className="text-white text-2xl font-black mb-1">
+                    {i18n.language === 'ar' ? area.name : (area.name_en || area.name)}
+                  </h4>
+                  <p className="text-white/70 text-sm font-bold">{area.count} {t('stats_units')}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 4. Featured Listings Grid */}
-      <section className="py-24 bg-background">
+      {/* 4. Projects Section (NEW) */}
+      <section className="py-24 bg-surface-container/30">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 text-right">
+            <div className="text-right">
+               <h2 className="text-4xl md:text-6xl font-black text-on-surface mb-4">
+                  {i18n.language === 'ar' ? 'أحدث' : 'Latest'} <span className="text-primary italic">{t('our_projects')}</span>
+               </h2>
+               <p className="text-on-surface-variant text-lg font-bold">
+                 {i18n.language === 'ar' ? 'استكشف مشاريعنا السكنية الفاخرة والكمبوندات المتكاملة' : 'Explore our world-class residential projects and integrated compounds'}
+               </p>
+            </div>
+            <Link to="/projects" className="text-primary font-black hover:underline flex items-center gap-2 text-xl">
+               {t('view_all')} <ArrowLeft size={24} className="rtl-flip" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {projects.map((project) => (
+              <motion.div 
+                key={project._id}
+                whileHover={{ y: -10 }}
+                onClick={() => navigate(`/projects/${project._id}`)}
+                className="flex flex-col md:flex-row bg-surface border border-outline-variant/10 rounded-[2.5rem] overflow-hidden group cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-500"
+              >
+                <div className="w-full md:w-2/5 h-64 md:h-auto overflow-hidden">
+                  <img 
+                    src={project.image?.startsWith('/uploads') ? `${SERVER_URL}${project.image}` : project.image} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                    alt={project.name}
+                  />
+                </div>
+                <div className="w-full md:w-3/5 p-8 flex flex-col justify-center text-right">
+                   <div className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-widest mb-4">
+                      <Building2 size={16} />
+                      {project.location}
+                   </div>
+                   <h3 className="text-2xl font-black text-on-surface mb-2 group-hover:text-primary transition-colors">
+                      {i18n.language === 'ar' ? project.name : (project.name_en || project.name)}
+                   </h3>
+                   <p className="text-on-surface-variant text-sm font-bold line-clamp-3 mb-6">
+                      {i18n.language === 'ar' ? project.description : (project.desc_en || project.description)}
+                   </p>
+                   <div className="text-primary font-black flex items-center gap-2 transition-transform">
+                      {t('more_btn')} <ArrowLeft size={20} />
+                   </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Featured Properties Section */}
+      <section className="py-24">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 text-right">
             <div className="text-right">
@@ -280,22 +279,13 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            {apartments.length > 0 ? (
-              apartments.map(apt => (
-                <PropertyCard 
-                  key={apt._id} 
-                  property={apt} 
-                  linkUrl={`/apartments/${apt._id}`}
-                />
-              ))
-            ) : (
-              <div className="col-span-full p-24 text-center bg-surface-low rounded-[3rem] border-2 border-dashed border-outline-variant/10">
-                <div className="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Building2 size={40} className="animate-pulse" />
-                </div>
-                <p className="text-on-surface-variant text-xl font-black italic">جاري تحميل أحدث العقارات المتاحة...</p>
-              </div>
-            )}
+            {apartments.map(apt => (
+              <PropertyCard 
+                key={apt._id} 
+                property={apt} 
+                linkUrl={`/apartments/${apt._id}`}
+              />
+            ))}
           </div>
         </div>
       </section>
