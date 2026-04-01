@@ -14,4 +14,4 @@ Allow: /status
 Crawl-delay: 1
 
 # Sitemap location
-Sitemap: https://ratgate-api.red-gate.tech/sitemap.xml
+Sitemap: https://red-gate.tech/sitemap.xml
