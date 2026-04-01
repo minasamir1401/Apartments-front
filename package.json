@@ -56,6 +56,11 @@
       "--no-sandbox",
       "--disable-setuid-sandbox"
     ],
-    "inlineCss": true
+    "inlineCss": false,
+    "skipThirdPartyRequests": true,
+    "cacheResponses": false,
+    "minifyHtml": {
+      "collapseWhitespace": true
+    }
   }
 }
