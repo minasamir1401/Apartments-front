@@ -292,6 +292,16 @@ const ProjectDetails = () => {
                <p className="font-bold text-on-surface-variant leading-relaxed">
                  {isEn ? (project.location_en || project.location || 'New Cairo, Egypt') : (project.location || project.location_en || 'القاهرة الجديدة، مصر')}
                </p>
+               {project.map_link && (
+                 <a 
+                   href={project.map_link} 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   className="mt-4 flex items-center justify-center gap-2 w-full py-3 bg-primary/5 text-primary border border-primary/20 rounded-2xl font-black hover:bg-primary hover:text-white transition-all shadow-sm"
+                 >
+                   <MapPin size={16} /> {t('view_on_map')}
+                 </a>
+               )}
             </div>
 
             <div className="bg-neutral-800 p-8 rounded-[3rem] text-white shadow-xl flex items-center justify-between">

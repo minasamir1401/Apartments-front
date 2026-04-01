@@ -14,7 +14,8 @@ const EMPTY_PROJECT = {
   unit_types: [],
   location: '',
   location_en: '',
-  status: 'active' 
+  status: 'active',
+  map_link: ''
 };
 
 const ProjectManager = () => {
@@ -223,6 +224,11 @@ const ProjectManager = () => {
                   <label className="block text-sm font-bold mb-2 text-neutral-500 text-left">Location / Address (EN)</label>
                   <input className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:border-primary outline-none text-left" value={editingProject.location_en || ''} onChange={e => setEditingProject({...editingProject, location_en: e.target.value})} placeholder="e.g. New Cairo, Egypt" />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold mb-2 text-primary">رابط الخريطة (Google Maps Link)</label>
+                <input className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:border-primary outline-none" value={editingProject.map_link || ''} onChange={e => setEditingProject({...editingProject, map_link: e.target.value})} placeholder="https://maps.app.goo.gl/..." />
               </div>
 
               <div className="bg-neutral-50 p-6 rounded-[2rem] border border-neutral-200">

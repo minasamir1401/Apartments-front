@@ -108,6 +108,16 @@ const ApartmentDetails = () => {
               <div className="flex items-center gap-2 text-on-surface-variant font-bold">
                  <MapPin size={18} className="text-primary" />
                  <span>{currentLoc}</span>
+                  {apt.map_link && (
+                    <a 
+                      href={apt.map_link} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-1 text-primary hover:underline text-xs bg-primary/5 px-3 py-1 rounded-full transition-all"
+                    >
+                      <Share2 size={12} className="rotate-45" /> {t('view_on_map')}
+                    </a>
+                  )}
               </div>
            </div>
            

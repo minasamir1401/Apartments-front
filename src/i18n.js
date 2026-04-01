@@ -143,7 +143,8 @@ i18n
           "footer_phone": "Unified Number",
           "footer_email": "Email Support",
           "go_back": "Go Back to All Properties",
-          "not_found": "Oops, property not found"
+          "not_found": "Oops, property not found",
+          "view_on_map": "View on Google Maps"
         }
       },
       ar: {
@@ -282,7 +283,8 @@ i18n
           "footer_phone": "الرقم الموحد",
           "footer_email": "البريد الإلكتروني",
           "go_back": "العودة لكل العقارات",
-          "not_found": "عذراً، لم نجد العقار المطلوب"
+          "not_found": "عذراً، لم نجد العقار المطلوب",
+          "view_on_map": "عرض الموقع على الخريطة"
         }
       }
     },

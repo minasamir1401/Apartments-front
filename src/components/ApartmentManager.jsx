@@ -16,7 +16,7 @@ const AMENITIES_OPTIONS = [
 const EMPTY_APT = {
   title: '', title_en: '', price: 0, priceType: 'daily', location: '', location_en: '', beds: 1, baths: 1, size: '',
   description: '', description_en: '', images: [], amenities: [], rules: [],
-  type: 'apartment', category: 'buy'
+  type: 'apartment', category: 'buy', map_link: ''
 };
 
 const ApartmentManager = () => {
@@ -257,6 +257,16 @@ const ApartmentManager = () => {
                     value={editingApt.size || ''}
                     onChange={e => setEditingApt({ ...editingApt, size: e.target.value })}
                     placeholder="مثال: 150م"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">رابط الخريطة (Google Maps)</label>
+                  <input 
+                    type="text" 
+                    className="input-field h-12 md:h-14 text-sm font-bold" 
+                    value={editingApt.map_link || ''}
+                    onChange={e => setEditingApt({ ...editingApt, map_link: e.target.value })}
+                    placeholder="ضع رابط Location هنا (مثل: https://maps.app.goo.gl/...)"
                   />
                 </div>
               </div>
