@@ -125,7 +125,7 @@ const Apartments = () => {
                 <PropertyCard 
                   key={apt._id} 
                   property={apt} 
-                  onClick={() => navigate(`/apartments/${apt._id}`)} 
+                  linkUrl={`/apartments/${apt._id}`} 
                 />
               ))
             ) : (

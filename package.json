@@ -4,9 +4,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "postbuild": "react-snap",
+    "preview": "vite preview",
+    "start": "serve -s dist -l $PORT"
   },
   "dependencies": {
+    "serve": "^14.2.4",
     "axios": "^1.13.6",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
@@ -41,9 +44,18 @@
     "@vitejs/plugin-react": "^6.0.1",
     "autoprefixer": "^10.4.27",
     "postcss": "^8.5.8",
+    "react-snap": "^1.23.0",
     "tailwindcss": "^4.2.2",
     "terser": "^5.46.1",
     "vite": "^8.0.0",
     "vite-plugin-react": "^4.0.0"
+  },
+  "reactSnap": {
+    "source": "dist",
+    "puppeteerArgs": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ],
+    "inlineCss": true
   }
 }

@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { MapPin, BedDouble, Bath, Square, Heart, Share2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
-const PropertyCard = ({ property, onClick }) => {
+const PropertyCard = ({ property, onClick, linkUrl }) => {
   const { t, i18n } = useTranslation();
   const isEn = i18n.language === 'en';
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -12,13 +13,13 @@ const PropertyCard = ({ property, onClick }) => {
     ? `${SERVER_URL}${property.images[0]}` 
     : property.images?.[0];
 
-  return (
+  const cardContent = (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       className="group bg-surface rounded-[1.5rem] overflow-hidden border border-outline-variant/10 hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col h-full"
-      onClick={onClick}
+      onClick={!linkUrl ? onClick : undefined}
     >
       {/* Image Section — explicit 4:3 prevents CLS */}
       <div className="relative w-full" style={{ aspectRatio: '4/3' }}>
@@ -40,8 +41,9 @@ const PropertyCard = ({ property, onClick }) => {
         )}
         <div className="absolute top-4 right-4 flex gap-2">
           <button 
-            className="p-2 bg-surface/20 backdrop-blur-md rounded-full text-white hover:bg-primary transition-colors"
+            className="p-2 bg-surface/20 backdrop-blur-md rounded-full text-white hover:bg-primary transition-colors z-10"
             aria-label={t('save_property') || 'حفظ العقار'}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
           >
             <Heart size={18} />
           </button>
@@ -92,9 +94,9 @@ const PropertyCard = ({ property, onClick }) => {
             <span className="text-on-surface-variant text-sm font-bold mr-1">{t('currency')}</span>
           </div>
           <button 
-            className="text-primary hover:bg-primary/5 p-2 rounded-xl transition-colors"
+            className="text-primary hover:bg-primary/5 p-2 rounded-xl transition-colors z-10"
             aria-label="مشاركة العقار"
-            onClick={(e) => { e.stopPropagation(); navigator.clipboard?.writeText(window.location.origin + '/apartments/' + property._id); }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigator.clipboard?.writeText(window.location.origin + '/apartments/' + property._id); }}
           >
             <Share2 size={18} />
           </button>
@@ -102,6 +104,8 @@ const PropertyCard = ({ property, onClick }) => {
       </div>
     </motion.div>
   );
+
+  return linkUrl ? <Link to={linkUrl} className="block h-full no-underline">{cardContent}</Link> : cardContent;
 };
 
 export default PropertyCard;

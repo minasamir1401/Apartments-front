@@ -14,11 +14,18 @@ const SERVER_URL = API_BASE;
 
 const Home = () => {
   const { t, i18n } = useTranslation();
-  const [slides, setSlides] = useState([]);
+  const [slides, setSlides] = useState([{
+    title: 'RED GATE LUXURY',
+    subtitle: 'Distinctive Quality Residences',
+    highlight: 'RED GATE',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&w=1200&q=70',
+    button_text: 'استعراض الوحدات',
+    button_link: '/apartments'
+  }]);
   const [apartments, setApartments] = useState([]);
   const [areas, setAreas] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,7 +77,6 @@ const Home = () => {
     return () => clearInterval(timer);
   }, [slides.length]);
 
-  if (loading) return null;
   if (!Array.isArray(slides) || slides.length === 0) return null;
   const current = slides[currentSlide];
   const heroImage = current?.image?.startsWith('/uploads') ? `${SERVER_URL}${current.image}` : current?.image;
@@ -279,7 +285,7 @@ const Home = () => {
                 <PropertyCard 
                   key={apt._id} 
                   property={apt} 
-                  onClick={() => navigate(`/apartments/${apt._id}`)}
+                  linkUrl={`/apartments/${apt._id}`}
                 />
               ))
             ) : (

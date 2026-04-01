@@ -297,9 +297,7 @@ const ProjectDetails = () => {
                  <MapPin size={24} className="text-primary"/> 
                  {isEn ? 'Project Location' : 'موقع المشروع'}
                </h4>
-               <p className="font-bold text-on-surface-variant leading-relaxed mb-6">
-                 {isEn ? (project.location_en || project.location || 'New Cairo, Egypt') : (project.location || project.location_en || 'القاهرة الجديدة، مصر')}
-               </p>
+
                {project.map_link && (
                  <GoogleMapEmbed link={project.map_link} title={isEn ? project.title_en : project.title} />
                )}

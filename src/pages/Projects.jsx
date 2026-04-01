@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, ArrowLeft, X, ChevronRight, ChevronLeft, Image as ImageIcon } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 
 const Projects = () => {
@@ -93,50 +93,50 @@ const Projects = () => {
           <AnimatePresence mode="popLayout">
             {projects.length > 0 ? (
               projects.map((project, idx) => (
-                <motion.div 
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  key={project._id}
-                  className="bg-surface-container rounded-[3rem] overflow-hidden group shadow-xl border border-outline-variant/10 flex flex-col md:flex-row relative cursor-pointer"
-                  onClick={() => navigate(`/projects/${project._id}`)}
-                >
-                  <div 
-                    onClick={(e) => { e.stopPropagation(); openGallery(project); }}
-                    className="w-full md:w-2/5 aspect-[4/3] md:aspect-auto md:min-h-full relative overflow-hidden bg-neutral-100"
+                <Link to={`/projects/${project._id}`} key={project._id} className="block no-underline">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="bg-surface-container rounded-[3rem] overflow-hidden group shadow-xl border border-outline-variant/10 flex flex-col md:flex-row relative cursor-pointer"
                   >
-                    {(project.main_image || (project.images && project.images.length > 0)) ? (
-                      <img 
-                        src={getImageUrl(project.main_image || project.images[0])} 
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 max-h-[300px] md:max-h-none" 
-                        alt={isEn ? project.title_en : project.title} 
-                      />
-                    ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center text-neutral-400 bg-neutral-200">
-                        <Building2 size={48} className="mb-2 opacity-50" />
-                        <span className="font-bold text-sm">No Image</span>
-                      </div>
-                    )}
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl font-black text-sm text-primary shadow-lg border border-white/20">
-                      {project.status === 'active' ? (isEn ? 'Active' : 'نشط') : (isEn ? 'Completed' : 'مكتمل')}
-                    </div>
-                  </div>
-                  <div className="p-8 md:p-10 w-full md:w-3/5 flex flex-col justify-center text-right">
-                    <h3 className="text-2xl md:text-3xl font-black text-on-surface mb-2">
-                      {isEn ? (project.title_en || project.title) : project.title}
-                    </h3>
-                    <p className="text-on-surface-variant text-sm md:text-base font-bold leading-relaxed mb-6 line-clamp-3">
-                      {isEn ? (project.description_en || project.description) : project.description}
-                    </p>
-                    
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); navigate(`/projects/${project._id}`); }}
-                      className="mt-auto self-start px-6 py-3 bg-primary text-on-primary rounded-2xl font-black flex items-center gap-3 hover:bg-primary/90 transition-colors shadow-lg"
+                    <div 
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); openGallery(project); }}
+                      className="w-full md:w-2/5 aspect-[4/3] md:aspect-auto md:min-h-full relative overflow-hidden bg-neutral-100"
                     >
-                      {isEn ? 'Project Details' : 'استعراض الوحدات'} <ArrowLeft size={18} className={isEn ? "rotate-180" : ""} />
-                    </button>
-                  </div>
-                </motion.div>
+                      {(project.main_image || (project.images && project.images.length > 0)) ? (
+                        <img 
+                          src={getImageUrl(project.main_image || project.images[0])} 
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 max-h-[300px] md:max-h-none" 
+                          alt={isEn ? project.title_en : project.title} 
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center text-neutral-400 bg-neutral-200">
+                          <Building2 size={48} className="mb-2 opacity-50" />
+                          <span className="font-bold text-sm">No Image</span>
+                        </div>
+                      )}
+                      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl font-black text-sm text-primary shadow-lg border border-white/20">
+                        {project.status === 'active' ? (isEn ? 'Active' : 'نشط') : (isEn ? 'Completed' : 'مكتمل')}
+                      </div>
+                    </div>
+                    <div className="p-8 md:p-10 w-full md:w-3/5 flex flex-col justify-center text-right">
+                      <h3 className="text-2xl md:text-3xl font-black text-on-surface mb-2">
+                        {isEn ? (project.title_en || project.title) : project.title}
+                      </h3>
+                      <p className="text-on-surface-variant text-sm md:text-base font-bold leading-relaxed mb-6 line-clamp-3">
+                        {isEn ? (project.description_en || project.description) : project.description}
+                      </p>
+                      
+                      <span 
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                        className="mt-auto self-start px-6 py-3 bg-primary text-on-primary rounded-2xl font-black flex items-center gap-3 hover:bg-primary/90 transition-colors shadow-lg"
+                      >
+                        {isEn ? 'Project Details' : 'استعراض الوحدات'} <ArrowLeft size={18} className={isEn ? "rotate-180" : ""} />
+                      </span>
+                    </div>
+                  </motion.div>
+                </Link>
               ))
             ) : (
               <motion.div 
