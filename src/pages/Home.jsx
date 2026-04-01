@@ -12,6 +12,13 @@ const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 const API = `${API_BASE}/api/hero`;
 const SERVER_URL = API_BASE; 
 
+const getImageUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http') || url.startsWith('data:')) return url;
+  const path = url.startsWith('/') ? url : `/${url}`;
+  return `${SERVER_URL}${path}`;
+};
+
 const Home = () => {
   const { t, i18n } = useTranslation();
   const [slides, setSlides] = useState([{
@@ -73,18 +80,17 @@ const Home = () => {
   }, [slides.length]);
 
   const current = slides[currentSlide];
-  const heroImage = current?.image?.startsWith('/uploads') ? `${SERVER_URL}${current.image}` : current?.image;
+  const heroImage = getImageUrl(current?.image);
 
   return (
     <div className="overflow-hidden" style={{backgroundColor: 'var(--color-surface)'}}>
       <SEO 
-        title="Red Gate Egypt | ريد غيت للعقارات الفاخرة في مصر"
-        description="ريد غيت للعقارات - المنصة الأولى للعقارات الفاخرة في مصر. اعثر على شقتك المثالية في الجونة، الغردقة، والقاهرة الجديدة. Red Gate Egypt – Find luxury properties for sale and rent."
+        title="Red Gate Egypt | المنصة الأولى للعقارات الفاخرة"
+        description="استكشف أرقى الشقق والمشاريع السكنية في الجونة، الغردقة، والقاهرة الجديدة."
         url="https://red-gate.tech"
-        image="https://red-gate.tech/og-image.jpg"
       />
 
-      {/* 1. Hero Slider */}
+      {/* 1. Hero */}
       <section className="relative h-screen flex items-center justify-center bg-black overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div 
@@ -98,15 +104,13 @@ const Home = () => {
              <motion.img 
                initial={{ scale: 1.1 }}
                animate={{ scale: 1.25 }}
-               transition={{ duration: 10, ease: "linear" }}
                src={heroImage} 
                className="w-full h-full object-cover"
-               alt="Red Gate Egypt"
+               alt="Red Gate"
              />
              <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-black/90"></div>
           </motion.div>
         </AnimatePresence>
-
         <div className="container mx-auto px-6 relative z-20 text-center">
             <AnimatePresence mode="wait">
               <motion.div
@@ -130,73 +134,53 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 2. Stats Section */}
+      {/* 2. Stats */}
       <section className="py-12 bg-surface relative z-30 -mt-10 mx-auto max-w-6xl rounded-[3rem] shadow-xl border border-outline-variant/10">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="container mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center flex flex-col items-center gap-2">
-              <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-2">
-                <HomeIcon size={24} />
-              </div>
+              <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-2"><HomeIcon size={24} /></div>
               <h4 className="text-2xl font-black text-on-surface">1,500+</h4>
               <p className="text-on-surface-variant text-xs font-bold">{t('stats_units')}</p>
             </div>
             <div className="text-center flex flex-col items-center gap-2">
-              <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-2">
-                <Users size={24} />
-              </div>
+              <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-2"><Users size={24} /></div>
               <h4 className="text-2xl font-black text-on-surface">50,000+</h4>
               <p className="text-on-surface-variant text-xs font-bold">{t('stats_visitors')}</p>
             </div>
             <div className="text-center flex flex-col items-center gap-2">
-              <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-2">
-                <MapIcon size={24} />
-              </div>
+              <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-2"><MapIcon size={24} /></div>
               <h4 className="text-2xl font-black text-on-surface">25+</h4>
               <p className="text-on-surface-variant text-xs font-bold">{t('stats_cities')}</p>
             </div>
             <div className="text-center flex flex-col items-center gap-2">
-              <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-2">
-                <CheckCircle2 size={24} />
-              </div>
+              <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-2"><CheckCircle2 size={24} /></div>
               <h4 className="text-2xl font-black text-on-surface">100%</h4>
               <p className="text-on-surface-variant text-xs font-bold">{t('stats_verified')}</p>
             </div>
-          </div>
         </div>
       </section>
 
-      {/* 3. Areas Section */}
-      <section className="py-24" style={{backgroundColor: 'var(--color-surface)'}}>
+      {/* 3. Areas */}
+      <section className="py-24">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 text-right">
-            <div className="text-right">
+            <div>
                <h2 className="text-4xl md:text-6xl font-black text-on-surface mb-4">
-                 <Trans i18nKey="browse_title">
-                   تصفح حسب <span className="text-primary italic">المنطقة</span>
-                 </Trans>
+                 <Trans i18nKey="browse_title">تصفح حسب <span className="text-primary italic">المنطقة</span></Trans>
                </h2>
                <p className="text-on-surface-variant text-lg font-bold">{t('browse_subtitle')}</p>
             </div>
-            <Link to="/apartments" className="text-primary font-black hover:underline flex items-center gap-2 text-xl">
+            <Link to="/apartments" className="text-primary font-black flex items-center gap-2 text-xl">
                {t('view_all')} <ArrowLeft size={24} className="rtl-flip" />
             </Link>
           </div>
-          
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            {areas.map((area) => (
-              <motion.div 
-                whileHover={{ y: -10 }}
-                key={area._id} 
-                onClick={() => navigate(`/apartments?search=${encodeURIComponent(area.name)}`)}
-                className="relative aspect-[4/5] rounded-[3rem] overflow-hidden group cursor-pointer shadow-xl border border-outline-variant/10"
-              >
-                <img src={area.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt={area.name} />
+            {areas.map((area, idx) => (
+              <motion.div whileHover={{ y: -10 }} key={area._id || area.id || idx} onClick={() => navigate(`/apartments?search=${encodeURIComponent(area.name)}`)} className="relative aspect-[4/5] rounded-[3rem] overflow-hidden group cursor-pointer shadow-xl border border-outline-variant/10">
+                <img src={getImageUrl(area.image)} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt={area.name} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                 <div className="absolute bottom-8 right-8 text-right">
-                  <h4 className="text-white text-2xl font-black mb-1">
-                    {i18n.language === 'ar' ? area.name : (area.name_en || area.name)}
-                  </h4>
+                  <h4 className="text-white text-2xl font-black mb-1">{i18n.language === 'ar' ? area.name : (area.name_en || area.name)}</h4>
                   <p className="text-white/70 text-sm font-bold">{area.count} {t('stats_units')}</p>
                 </div>
               </motion.div>
@@ -205,52 +189,52 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. Projects Section (NEW) */}
+      {/* 4. Projects Section */}
       <section className="py-24 bg-surface-container/30">
         <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 text-right">
-            <div className="text-right">
+          <div className="flex justify-between items-end mb-16 text-right">
+            <div>
                <h2 className="text-4xl md:text-6xl font-black text-on-surface mb-4">
                   {i18n.language === 'ar' ? 'أحدث' : 'Latest'} <span className="text-primary italic">{t('our_projects')}</span>
                </h2>
-               <p className="text-on-surface-variant text-lg font-bold">
-                 {i18n.language === 'ar' ? 'استكشف مشاريعنا السكنية الفاخرة والكمبوندات المتكاملة' : 'Explore our world-class residential projects and integrated compounds'}
-               </p>
+               <p className="text-on-surface-variant text-lg font-bold">{i18n.language === 'ar' ? 'استكشف مشاريعنا السكنية الفاخرة' : 'Explore our premium residential projects'}</p>
             </div>
-            <Link to="/projects" className="text-primary font-black hover:underline flex items-center gap-2 text-xl">
+            <Link to="/projects" className="text-primary font-black flex items-center gap-2 text-xl">
                {t('view_all')} <ArrowLeft size={24} className="rtl-flip" />
             </Link>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map((project) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {projects.map((p, idx) => (
               <motion.div 
-                key={project._id}
+                key={p._id || p.id || idx}
                 whileHover={{ y: -10 }}
-                onClick={() => navigate(`/projects/${project._id}`)}
-                className="flex flex-col md:flex-row bg-surface border border-outline-variant/10 rounded-[2.5rem] overflow-hidden group cursor-pointer shadow-xl hover:shadow-2xl transition-all duration-500"
+                onClick={() => navigate(`/projects/${p._id || p.id}`)}
+                className="bg-surface-container rounded-[3rem] overflow-hidden group shadow-xl border border-outline-variant/10 flex flex-col md:flex-row relative cursor-pointer"
               >
-                <div className="w-full md:w-2/5 h-64 md:h-auto overflow-hidden">
+                <div className="w-full md:w-2/5 aspect-[4/3] md:aspect-auto md:min-h-full overflow-hidden bg-neutral-100 relative">
                   <img 
-                    src={project.image?.startsWith('/uploads') ? `${SERVER_URL}${project.image}` : project.image} 
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                    alt={project.name}
+                    src={getImageUrl(p.main_image)} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 max-h-[300px] md:max-h-none" 
+                    alt={p.title}
                   />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl font-black text-sm text-primary shadow-lg border border-white/20">
+                    {i18n.language === 'ar' ? (p.status || 'مكتمل') : (p.status_en || p.status || 'Completed')}
+                  </div>
                 </div>
-                <div className="w-full md:w-3/5 p-8 flex flex-col justify-center text-right">
-                   <div className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-widest mb-4">
-                      <Building2 size={16} />
-                      {project.location}
-                   </div>
-                   <h3 className="text-2xl font-black text-on-surface mb-2 group-hover:text-primary transition-colors">
-                      {i18n.language === 'ar' ? project.name : (project.name_en || project.name)}
-                   </h3>
-                   <p className="text-on-surface-variant text-sm font-bold line-clamp-3 mb-6">
-                      {i18n.language === 'ar' ? project.description : (project.desc_en || project.description)}
-                   </p>
-                   <div className="text-primary font-black flex items-center gap-2 transition-transform">
-                      {t('more_btn')} <ArrowLeft size={20} />
-                   </div>
+                <div className="p-8 md:p-10 w-full md:w-3/5 flex flex-col justify-center text-right">
+                  <div className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-widest mb-3">
+                    <Building2 size={14} />
+                    {i18n.language === 'ar' ? p.location : (p.location_en || p.location)}
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-black text-on-surface mb-2">
+                    {i18n.language === 'ar' ? p.title : (p.title_en || p.title)}
+                  </h3>
+                  <p className="text-on-surface-variant text-sm md:text-base font-bold leading-relaxed mb-6 line-clamp-3">
+                    {i18n.language === 'ar' ? p.description : (p.description_en || p.description)}
+                  </p>
+                  <span className="mt-auto self-start px-6 py-3 bg-primary text-on-primary rounded-2xl font-black flex items-center gap-3 transition-all hover:scale-105 shadow-lg">
+                    {i18n.language === 'ar' ? 'استعراض الوحدات' : 'View Units'} <ArrowLeft size={18} />
+                  </span>
                 </div>
               </motion.div>
             ))}
@@ -258,41 +242,27 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 5. Featured Properties Section */}
+      {/* 5. Featured Units */}
       <section className="py-24">
         <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 text-right">
-            <div className="text-right">
+          <div className="flex justify-between items-end mb-16 text-right">
+            <div>
                <h2 className="text-4xl md:text-6xl font-black text-on-surface mb-4">
-                 <Trans i18nKey="featured_title">
-                   وحدات <span className="text-primary italic">مميزة</span>
-                 </Trans>
+                 <Trans i18nKey="featured_title">وحدات <span className="text-primary italic">مميزة</span></Trans>
                </h2>
                <p className="text-on-surface-variant text-lg font-bold">{t('featured_subtitle')}</p>
             </div>
-            <button 
-              onClick={() => navigate('/apartments')}
-              className="px-10 py-4 bg-surface-low text-on-surface font-black rounded-full hover:bg-primary hover:text-white transition-all shadow-md text-lg"
-            >
-              {t('more_btn')}
-            </button>
+            <button onClick={() => navigate('/apartments')} className="px-10 py-4 bg-surface-low text-on-surface font-black rounded-full hover:bg-primary hover:text-white transition-all shadow-md text-lg">{t('more_btn')}</button>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-            {apartments.map(apt => (
-              <PropertyCard 
-                key={apt._id} 
-                property={apt} 
-                linkUrl={`/apartments/${apt._id}`}
-              />
+            {apartments.map((apt, idx) => (
+              <PropertyCard key={apt._id || apt.id || idx} property={apt} linkUrl={`/apartments/${apt._id}`} />
             ))}
           </div>
         </div>
       </section>
 
-      <style dangerouslySetInnerHTML={{ __html: `
-        .font-cairo { font-family: 'Cairo', sans-serif; }
-      `}} />
+      <style dangerouslySetInnerHTML={{ __html: `.font-cairo { font-family: 'Cairo', sans-serif; }` }} />
     </div>
   );
 };
