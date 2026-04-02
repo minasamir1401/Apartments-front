@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, X, Check, Save, Image, Link, MapPin } from 'lucide-react';
+import { Plus, Edit, Trash2, X, Check, Save, Image, Link, MapPin, Building2, SlidersHorizontal } from 'lucide-react';
 import api from '../utils/api';
 import GoogleMapEmbed from './GoogleMapEmbed';
 
@@ -17,11 +17,13 @@ const AMENITIES_OPTIONS = [
 const EMPTY_APT = {
   title: '', title_en: '', price: 0, priceType: 'daily', location: '', location_en: '', beds: 1, baths: 1, size: '',
   description: '', description_en: '', images: [], amenities: [], rules: [],
-  type: 'apartment', category: 'buy', map_link: ''
+  type: 'apartment', category: 'buy', map_link: '',
+  unit_types: [], details: '', details_en: '', project_id: '', project_title: ''
 };
 
 const ApartmentManager = () => {
   const [apartments, setApartments] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [editingApt, setEditingApt] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [newImageUrl, setNewImageUrl] = useState('');
@@ -36,7 +38,37 @@ const ApartmentManager = () => {
     }
   };
 
-  useEffect(() => { fetchApts(); }, []);
+  const fetchProjects = async () => {
+    try {
+      const res = await api.get('/projects');
+      setProjects(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      setProjects([]);
+    }
+  };
+
+  useEffect(() => { 
+    fetchApts(); 
+    fetchProjects();
+  }, []);
+
+  // ... (keeping handleSave, deleteApt, toggleAmenity, etc.)
+
+  const addUnitType = () => {
+    const newUnits = [...(editingApt.unit_types || []), { title: '', price: '', size: '' }];
+    setEditingApt({ ...editingApt, unit_types: newUnits });
+  };
+
+  const removeUnitType = (index) => {
+    const newUnits = editingApt.unit_types.filter((_, i) => i !== index);
+    setEditingApt({ ...editingApt, unit_types: newUnits });
+  };
+
+  const updateUnitType = (index, field, value) => {
+    const newUnits = [...editingApt.unit_types];
+    newUnits[index] = { ...newUnits[index], [field]: value };
+    setEditingApt({ ...editingApt, unit_types: newUnits });
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -238,6 +270,22 @@ const ApartmentManager = () => {
                   </select>
                 </div>
                 <div>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-primary pr-2 italic">مشروع مرتبط (Project Selection)</label>
+                  <select 
+                    className="input-field h-12 md:h-14 text-sm font-bold border-blue-200"
+                    value={editingApt.project_id || ''}
+                    onChange={e => {
+                      const proj = projects.find(p => p._id === e.target.value);
+                      setEditingApt({ ...editingApt, project_id: e.target.value, project_title: proj ? proj.title : '' });
+                    }}
+                  >
+                    <option value="">لا يوجد مشروع مرتبط</option>
+                    {projects.map(proj => (
+                      <option key={proj._id} value={proj._id}>{proj.title}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
                   <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-600 pr-2">عدد الغرف</label>
                   <input type="number" className="input-field h-12 md:h-14 text-sm font-bold" value={editingApt.beds}
                     onChange={e => setEditingApt({ ...editingApt, beds: e.target.value })} />
@@ -282,6 +330,43 @@ const ApartmentManager = () => {
                 </div>
               </div>
 
+              {/* Unit Types (Models) */}
+              <div className="bg-blue-50/50 p-6 rounded-[2rem] border border-blue-100">
+                <div className="flex justify-between items-center mb-4">
+                  <label className="text-lg font-black text-blue-900 flex items-center gap-2">
+                    <Building2 size={20} /> النماذج المتاحة (الأسعار والأحجام)
+                  </label>
+                  <button type="button" onClick={addUnitType} className="bg-blue-600 text-white px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-blue-700">
+                    <Plus size={16} /> إضافة نموذج
+                  </button>
+                </div>
+                
+                <div className="space-y-3">
+                  {(editingApt.unit_types || []).map((unit, index) => (
+                    <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-3 bg-white p-4 rounded-xl shadow-sm border border-blue-100 items-end">
+                      <div>
+                        <label className="block text-[10px] font-bold mb-1 text-blue-900">نوع الوحدة</label>
+                        <input className="w-full px-3 py-2 rounded-lg border border-blue-50 outline-none text-sm" value={unit.title} onChange={e => updateUnitType(index, 'title', e.target.value)} placeholder="استوديو، غرفة.." />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold mb-1 text-blue-900">المساحة</label>
+                        <input className="w-full px-3 py-2 rounded-lg border border-blue-50 outline-none text-sm" value={unit.size} onChange={e => updateUnitType(index, 'size', e.target.value)} placeholder="مثلاً: 120م" />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold mb-1 text-blue-900">السعر</label>
+                        <input className="w-full px-3 py-2 rounded-lg border border-blue-50 outline-none text-sm" value={unit.price} onChange={e => updateUnitType(index, 'price', e.target.value)} placeholder="مثلاً: 4.5 مليون" />
+                      </div>
+                      <button type="button" onClick={() => removeUnitType(index)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg self-center mt-2 flex justify-center">
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+                  {(!editingApt.unit_types || editingApt.unit_types.length === 0) && (
+                    <div className="text-center py-4 text-neutral-400 text-sm italic">اضغط على "إضافة نموذج" لبدء إضافة الأسعار والأحجام</div>
+                  )}
+                </div>
+              </div>
+
               {/* Description */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
@@ -295,6 +380,22 @@ const ApartmentManager = () => {
                   <textarea className="input-field h-24 md:h-32 resize-none text-sm font-bold border-dashed" value={editingApt.description_en || ''}
                     onChange={e => setEditingApt({ ...editingApt, description_en: e.target.value })}
                     placeholder="Detailed English description..." />
+                </div>
+              </div>
+
+              {/* Full Details */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-primary pr-2">تفاصيل كاملة (عربي)</label>
+                  <textarea className="input-field h-32 md:h-48 resize-none text-sm font-bold" value={editingApt.details || ''}
+                    onChange={e => setEditingApt({ ...editingApt, details: e.target.value })}
+                    placeholder="اكتب التجهيزات والمواصفات الكاملة..." />
+                </div>
+                <div>
+                  <label className="block text-xs md:text-sm font-bold mb-2 text-neutral-400 pr-2 italic">Full Details (English)</label>
+                  <textarea className="input-field h-32 md:h-48 resize-none text-sm font-bold border-dashed" value={editingApt.details_en || ''}
+                    onChange={e => setEditingApt({ ...editingApt, details_en: e.target.value })}
+                    placeholder="Full equipment and specifications details..." />
                 </div>
               </div>
 

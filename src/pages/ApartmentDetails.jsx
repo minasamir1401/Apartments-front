@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { 
   Wifi, Wind, ChefHat, Tv, Car, ShieldCheck, Coffee, Calendar as CalendarIcon,
   MapPin, MessageCircle, ArrowRight, ArrowLeft, ChevronLeft, ChevronRight, CheckCircle, 
-  AlertCircle, Share2, BedDouble, Bath, Square, Heart, Star, Phone
+  AlertCircle, Share2, BedDouble, Bath, Square, Heart, Star, Phone, Building2, Ruler
 } from 'lucide-react';
 
 import SEO from '../components/SEO';
@@ -113,7 +113,15 @@ const ApartmentDetails = () => {
               <h1 className="text-3xl md:text-5xl font-black text-on-surface mb-2">{currentTitle}</h1>
               <div className="flex items-center gap-2 text-on-surface-variant font-bold">
                  <MapPin size={18} className="text-primary" />
-                 <span>{currentLoc}</span>
+                  <span>{currentLoc}</span>
+                  {apt.project_id && (
+                    <Link 
+                      to={`/projects/${apt.project_id}`}
+                      className="flex items-center gap-1 text-blue-600 hover:underline text-xs bg-blue-50 px-3 py-1 rounded-full transition-all font-black"
+                    >
+                      <Building2 size={12} /> {isEn ? 'Part of Project:' : 'تابع لمشروع:'} {apt.project_title || (isEn ? 'View Project' : 'عرض المشروع')}
+                    </Link>
+                  )}
                   {apt.map_link && (
                     <a 
                       href={apt.map_link} 
@@ -200,6 +208,46 @@ const ApartmentDetails = () => {
                 <p className="text-on-surface-variant leading-relaxed text-lg font-bold whitespace-pre-wrap">
                    {currentDesc}
                 </p>
+                {(apt.details || apt.details_en) && (
+                  <div className="mt-8 text-on-surface-variant/80 font-medium whitespace-pre-line border-t border-dashed border-outline-variant/20 pt-8 px-4 opacity-90 italic">
+                    {isEn ? (apt.details_en || apt.details) : (apt.details || apt.details_en)}
+                  </div>
+                )}
+
+                {/* Unit Types Section (Models) */}
+                {apt.unit_types?.length > 0 && (
+                  <div className="mt-16 bg-blue-50/30 p-8 md:p-10 rounded-[3rem] border border-blue-100 shadow-sm overflow-hidden relative">
+                    <h2 className="text-2xl font-black mb-8 flex items-center gap-4 text-blue-900">
+                        <Building2 size={24} className="text-blue-600"/>
+                        {isEn ? 'Available Units & Pricing' : 'نماذج الوحدات والأسعار المتاحة'}
+                    </h2>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-right border-collapse" dir={isEn ? 'ltr' : 'rtl'}>
+                          <thead>
+                              <tr className="border-b border-blue-200">
+                                <th className="py-4 px-2 font-black text-blue-800 text-sm">{isEn ? 'Type' : 'النوع'}</th>
+                                <th className="py-4 px-2 font-black text-blue-800 text-sm">{isEn ? 'Size' : 'المساحة'}</th>
+                                <th className="py-4 px-2 font-black text-blue-800 text-sm">{isEn ? 'Price' : 'السعر'}</th>
+                              </tr>
+                          </thead>
+                          <tbody className="divide-y divide-blue-100">
+                              {apt.unit_types.map((unit, idx) => (
+                                <tr key={idx} className="hover:bg-blue-100/30 transition-colors">
+                                  <td className="py-5 px-2 font-black text-on-surface">{unit.title}</td>
+                                  <td className="py-5 px-2 font-bold text-on-surface-variant flex items-center gap-2 italic">
+                                      <Ruler size={16}/> {unit.size}
+                                  </td>
+                                  <td className="py-5 px-2 font-black text-blue-600 text-lg">
+                                      {unit.price}
+                                  </td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                    </div>
+                  </div>
+                )}
+
                 {apt.map_link && (
                   <div className="mt-12">
                      <h3 className="text-2xl font-black text-on-surface mb-6 italic underline decoration-primary/30 decoration-8 underline-offset-8">{isEn ? 'Location' : 'الموقع على الخريطة'}</h3>

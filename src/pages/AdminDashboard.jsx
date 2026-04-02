@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, Home, Trash2, Bell, BellOff, BellRing, Building2, Lock, Save } from 'lucide-react';
+import { LayoutDashboard, Home, Trash2, Bell, BellOff, BellRing, Building2, Lock, Save, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ApartmentManager from '../components/ApartmentManager';
 import HeroManager from '../components/HeroManager';
 import AreaManager from '../components/AreaManager';
 import ProjectManager from '../components/ProjectManager';
+import SiteSettingsManager from '../components/SiteSettingsManager';
 import api from '../utils/api';
 
 
@@ -268,6 +269,12 @@ const AdminDashboard = () => {
           {t('admin_manage_hero')}
         </button>
         <button
+          onClick={() => setActiveTab('settings')}
+          className={`px-4 md:px-8 py-2 md:py-3 rounded-xl font-bold transition-all text-sm whitespace-nowrap flex-1 sm:flex-none ${activeTab === 'settings' ? 'bg-white shadow-sm text-black' : 'text-neutral-400'}`}
+        >
+          {isEn ? 'Settings' : 'الإعدادات'}
+        </button>
+        <button
           onClick={() => setActiveTab('security')}
           className={`px-4 md:px-8 py-2 md:py-3 rounded-xl font-bold transition-all text-sm whitespace-nowrap flex-1 sm:flex-none ${activeTab === 'security' ? 'bg-white shadow-sm text-black' : 'text-neutral-400'}`}
         >
@@ -373,6 +380,8 @@ const AdminDashboard = () => {
         <ProjectManager />
       ) : activeTab === 'hero' ? (
         <HeroManager />
+      ) : activeTab === 'settings' ? (
+        <SiteSettingsManager />
       ) : (
         <div className="max-w-2xl mx-auto">
           <div className="p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] shadow-xl border border-outline-variant/10" style={{backgroundColor: 'var(--color-surface-container-lowest)'}}>
