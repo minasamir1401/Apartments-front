@@ -67,28 +67,12 @@ const ProjectDetails = () => {
       await axios.post(`${API_BASE}/api/bookings`, payload);
       setBookingStatus('success');
 
-      // Construct WhatsApp message with ALL details
-      const msg = isEn 
-        ? `Hello, I'm interested in reserving a unit in "${project.title_en || project.title}".\n\n` +
-          `📍 Location: ${project.location_en || project.location}\n` +
-          `📝 Details: ${project.description_en || project.description}\n\n` +
-          `My Contact: ${bookingForm.name} (${bookingForm.phone})\n` +
-          `Notes: ${bookingForm.notes}`
-        : `السلام عليكم، أرغب في حجز وحدة في مشروع "${project.title}".\n\n` +
-          `📍 الموقع: ${project.location || project.location_en}\n` +
-          `📝 الوصف: ${project.description}\n\n` +
-          `الاسم: ${bookingForm.name}\n` +
-          `رقم الهاتف: ${bookingForm.phone}\n` +
-          `ملاحظات: ${bookingForm.notes}`;
-
-      const waLink = `https://wa.me/20${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-      
-      // Delay redirect to show success state
+      // إغلاق المودال بعد ثانيتين من غير ما يفتح واتساب - الإشعار بيوصل أوتوماتيك للإدارة
       setTimeout(() => {
-        window.open(waLink, '_blank');
         setShowBookingModal(false);
         setBookingStatus('idle');
-      }, 2000);
+        setBookingForm({ name: '', phone: '', notes: '' });
+      }, 2500);
     } catch (err) {
       alert('Error submitting booking');
       setBookingStatus('idle');
@@ -345,7 +329,7 @@ const ProjectDetails = () => {
                            <CheckCircle2 size={48} />
                         </motion.div>
                         <h2 className="text-3xl font-black mb-2">{isEn ? 'Booking Received!' : 'تم استلام طلبك!'}</h2>
-                        <p className="text-on-surface-variant font-bold mb-8">{isEn ? 'Redirecting to WhatsApp for consultation...' : 'نقوم الآن بتوجيهك للواتساب للمتابعة...'}</p>
+                        <p className="text-on-surface-variant font-bold mb-8">{isEn ? 'Our team will contact you very soon.' : 'سيقوم فريقنا بالتواصل معك في أقرب وقت.'}</p>
                      </div>
                    ) : (
                      <>
@@ -444,3 +428,4 @@ const ProjectDetails = () => {
 };
 
 export default ProjectDetails;
+
