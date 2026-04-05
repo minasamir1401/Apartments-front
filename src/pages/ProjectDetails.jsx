@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, ArrowRight, X, ChevronRight, ChevronLeft, MapPin, Ruler, Tag, Phone, CalendarCheck, Plus, CheckCircle2, User, Send } from 'lucide-react';
+import { Building2, ArrowRight, X, ChevronRight, ChevronLeft, ChevronDown, MapPin, Ruler, Tag, Phone, CalendarCheck, Plus, CheckCircle2, User, Send } from 'lucide-react';
 import SEO from '../components/SEO';
 import GoogleMapEmbed from '../components/GoogleMapEmbed';
 
@@ -24,6 +24,7 @@ const ProjectDetails = () => {
   const [bookingForm, setBookingForm] = useState({
     name: '',
     phone: '',
+    unitType: '',
     notes: ''
   });
 
@@ -61,7 +62,10 @@ const ProjectDetails = () => {
         notes: bookingForm.notes,
         projectId: project._id,
         projectTitle: project.title,
-        price: project.unit_types?.[0]?.price || 'N/A'
+        apartmentTitle: bookingForm.unitType || 'لم يحدد نموذج', // Store chosen unit internally in apartment field
+        price: bookingForm.unitType 
+          ? (project.unit_types?.find(u => u.title === bookingForm.unitType)?.price || 'N/A')
+          : (project.unit_types?.[0]?.price || 'N/A')
       };
 
       await axios.post(`${API_BASE}/api/bookings`, payload);
@@ -71,7 +75,7 @@ const ProjectDetails = () => {
       setTimeout(() => {
         setShowBookingModal(false);
         setBookingStatus('idle');
-        setBookingForm({ name: '', phone: '', notes: '' });
+        setBookingForm({ name: '', phone: '', unitType: '', notes: '' });
       }, 2500);
     } catch (err) {
       alert('Error submitting booking');
@@ -356,12 +360,41 @@ const ProjectDetails = () => {
                               <input 
                                 required
                                 type="tel"
+                                minLength="11"
+                                maxLength="11"
                                 className="w-full bg-surface-container px-6 py-4 rounded-2xl outline-none focus:ring-2 ring-primary border-none font-bold text-left"
                                 value={bookingForm.phone}
-                                onChange={e => setBookingForm({...bookingForm, phone: e.target.value})}
-                                placeholder={isEn ? '01XXXXXXXXX' : 'رقم الواتساب'}
+                                onChange={e => {
+                                  // السماح بالأرقام فقط
+                                  const val = e.target.value.replace(/\D/g, '');
+                                  setBookingForm({...bookingForm, phone: val})
+                                }}
+                                placeholder={isEn ? 'e.g. 01012345678' : 'مثال: 01012345678'}
+                                dir="ltr"
                               />
                            </div>
+                           {project?.unit_types?.length > 0 && (
+                             <div>
+                                <label className="block text-sm font-black mb-2 flex items-center gap-2">
+                                  <Building2 size={16} className="text-primary"/> {isEn ? 'Preferred Unit Type' : 'نوع الوحدة المفضل'}
+                                </label>
+                                <div className="relative">
+                                  <select
+                                    className="w-full bg-surface-container px-6 py-4 rounded-2xl outline-none focus:ring-2 ring-primary border-none font-bold appearance-none cursor-pointer"
+                                    value={bookingForm.unitType}
+                                    onChange={e => setBookingForm({...bookingForm, unitType: e.target.value})}
+                                  >
+                                    <option value="" disabled>{isEn ? '-- Select Unit Type --' : '-- اختر نوع الوحدة --'}</option>
+                                    {project.unit_types.map((u, i) => (
+                                      <option key={i} value={u.title}>{u.title} - {u.size} {isEn ? 'sqm' : 'م²'}</option>
+                                    ))}
+                                  </select>
+                                  <div className="absolute inset-y-0 end-4 flex items-center pointer-events-none">
+                                    <ChevronDown size={20} className="text-primary" />
+                                  </div>
+                                </div>
+                             </div>
+                           )}
                            <div>
                               <label className="block text-sm font-black mb-2">{isEn ? 'Notes (Optional)' : 'ملاحظات (اختياري)'}</label>
                               <textarea 
