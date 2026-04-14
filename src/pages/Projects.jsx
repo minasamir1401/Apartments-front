@@ -129,7 +129,6 @@ const Projects = () => {
                       </p>
                       
                       <span 
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         className="mt-auto self-start px-6 py-3 bg-primary text-on-primary rounded-2xl font-black flex items-center gap-3 hover:bg-primary/90 transition-colors shadow-lg"
                       >
                         {isEn ? 'Project Details' : 'استعراض الوحدات'} <ArrowLeft size={18} className={isEn ? "rotate-180" : ""} />
